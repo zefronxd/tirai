@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "1083878941089",
-    "project_id": "zefgram-328cc",
-    "storage_bucket": "zefgram-328cc.firebasestorage.app"
+    "project_number": "61241067974",
+    "project_id": "zefram-82c21",
+    "storage_bucket": "zefram-82c21.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1083878941089:android:e267d67cc4499ad25aebe0",
+        "mobilesdk_app_id": "1:61241067974:android:24d72a492cdaacde7a0ac7",
         "android_client_info": {
           "package_name": "io.github.zefronxd.zefgram"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAHqPprdlsXneLFxWpmyPqabYcxxn0iEIU"
+          "current_key": "AIzaSyAW3XqdGgXOJvfe9NBWreqUr_hXWNJhVP4"
         }
       ],
       "services": {
@@ -26,15 +26,15 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1083878941089:android:0a3f2825acfb88275aebe0",
+        "mobilesdk_app_id": "1:61241067974:android:e23de0f597a37df67a0ac7",
         "android_client_info": {
-          "package_name": "io.github.zefronxd.zefgram.beta"
+          "package_name": "uz.unnarsx.zefgram"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAHqPprdlsXneLFxWpmyPqabYcxxn0iEIU"
+          "current_key": "AIzaSyAW3XqdGgXOJvfe9NBWreqUr_hXWNJhVP4"
         }
       ],
       "services": {
