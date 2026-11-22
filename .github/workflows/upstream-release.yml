@@ -7,9 +7,12 @@
 name: Upstream merge and stable release
 
 on:
-  schedule:
-    - cron: '17 4 * * *'
   workflow_dispatch:
+    inputs:
+      force_build:
+        description: Build even if upstream has no new commits
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -39,19 +42,27 @@ jobs:
 
       - name: Install Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: ''
 
       - name: Check upstream and prepare merge
         id: update
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          FORCE: ${{ github.event.inputs.force_build }}
         shell: bash
         run: |
           set -euo pipefail
           git remote add upstream https://github.com/DrKLO/Telegram.git
           git fetch upstream master
           if git merge-base --is-ancestor upstream/master HEAD; then
-            echo 'changed=false' >> "$GITHUB_OUTPUT"
-            echo 'upstream/master is already included.'
+            if [[ "$FORCE" == "true" ]]; then
+              echo 'changed=true' >> "$GITHUB_OUTPUT"
+              echo 'No new upstream commits, building anyway (force_build).'
+            else
+              echo 'changed=false' >> "$GITHUB_OUTPUT"
+              echo 'upstream/master is already included.'
+            fi
             exit 0
           fi
 
@@ -145,4 +156,4 @@ jobs:
           tag="v${version_name}-${{ steps.version.outputs.version_code }}"
           gh release create "$tag" "${{ steps.apk.outputs.apk }}" \
             --repo "$GITHUB_REPOSITORY" --target "${{ steps.commit.outputs.sha }}" \
-            --title "Easygram $tag" --notes "Telegram upstream обновлён до текущего master."
+            --title "Easygram $tag" --notes "Telegram upstream updated to current master."
