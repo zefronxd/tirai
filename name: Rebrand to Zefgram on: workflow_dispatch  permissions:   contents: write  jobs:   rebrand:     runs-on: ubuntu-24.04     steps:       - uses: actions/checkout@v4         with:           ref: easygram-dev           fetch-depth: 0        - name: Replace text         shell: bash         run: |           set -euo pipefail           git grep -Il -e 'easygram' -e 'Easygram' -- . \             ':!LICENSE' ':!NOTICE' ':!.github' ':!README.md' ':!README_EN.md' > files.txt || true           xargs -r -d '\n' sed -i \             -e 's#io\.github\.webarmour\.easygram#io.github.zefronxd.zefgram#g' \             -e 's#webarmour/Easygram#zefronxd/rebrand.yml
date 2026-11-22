@@ -1,0 +1,29 @@
+name: Rebrand to Zefgram
+on: workflow_dispatch
+
+permissions:
+  contents: write
+
+jobs:
+  rebrand:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: easygram-dev
+          fetch-depth: 0
+
+      - name: Replace text
+        shell: bash
+        run: |
+          set -euo pipefail
+          git grep -Il -e 'easygram' -e 'Easygram' -- . \
+            ':!LICENSE' ':!NOTICE' ':!.github' ':!README.md' ':!README_EN.md' > files.txt || true
+          xargs -r -d '\n' sed -i \
+            -e 's#io\.github\.webarmour\.easygram#io.github.zefronxd.zefgram#g' \
+            -e 's#webarmour/Easygram#zefronxd/tirai#g' \
+            -e 's#easygram#zefgram#g' \
+            -e 's#Easygram#Zefgram#g' < files.txt
+          rm files.txt
+
+      - name: Rename files and
