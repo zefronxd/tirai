@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    This file is part of zefgram, a fork of Telegram for Android.
+    It is licensed under GNU GPL v. 2 or later.
+    You should have received a copy of the license in this archive (see LICENSE).
+
+    Copyright webarmour, 2026.
+-->
+<resources>
+    <color name="zefgram_bloom_blue_light_background">#A5D2FE</color>
+    <color name="zefgram_bloom_blue_light_foreground">#1361CF</color>
+    <color name="zefgram_bloom_blue_dark_background">#052040</color>
+    <color name="zefgram_bloom_blue_dark_foreground">#A5D2FE</color>
+    <color name="zefgram_bloom_mono_background">#0F0F10</color>
+    <color name="zefgram_bloom_mono_foreground">#6E6E6F</color>
+
+    <color name="zefgram_splash_background">#A5D2FE</color>
+</resources>

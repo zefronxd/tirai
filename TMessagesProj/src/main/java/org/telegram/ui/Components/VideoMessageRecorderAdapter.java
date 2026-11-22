@@ -1,0 +1,522 @@
+/*
+ * This file is part of zefgram, a fork of Telegram for Android.
+ * It is licensed under GNU GPL v. 2 or later.
+ * You should have received a copy of the license in this archive (see LICENSE).
+ *
+ * Copyright webarmour, 2026.
+ */
+
+package org.telegram.ui.Components;
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.graphics.SurfaceTexture;
+import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
+import android.util.Log;
+import android.view.Display;
+import android.view.Surface;
+import android.view.TextureView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import io.github.webarmour.videomessagerecorder.DiagnosticsMode;
+import io.github.webarmour.videomessagerecorder.VideoMessageRecorder;
+import io.github.webarmour.videomessagerecorder.camera.CameraRole;
+import io.github.webarmour.videomessagerecorder.camera.CameraUiState;
+import kotlin.Unit;
+
+/**
+ * Adapter between Telegram's existing circular preview/record-button UI and
+ * video-message-recorder 0.0.2. This is SOURCE-INTEGRATION CODE, not an APK patch.
+ * <p>
+ * Owns the VideoMessageRecorder and a Surface wrapper. The TextureView belongs
+ * to Telegram. A separate Telegram integration must supply onReady, stop/send,
+ * cancellation and the existing video-note sending pipeline.
+ * <p>
+ * All public control methods must be called on the Android main thread.
+ */
+public final class VideoMessageRecorderAdapter implements TextureView.SurfaceTextureListener {
+
+    public interface Listener {
+        void onCameraReady();
+        void onRecordingStarted();
+        void onRecordingPaused(File videoFile, long durationMs);
+        void onVideoNoteReady(File videoFile, long durationMs);
+        void onCancelled();
+        void onError(Exception exception);
+    }
+
+    // CUSTOM_RECORDER_START_DELAY_V1
+    // Start encoder after the first rendered preview frame, not directly on cameraReady.
+    // This only masks camera startup exposure settling; it does not trim frames
+    // after recording has already begun or mask transitions during a camera switch.
+    // CUSTOM_RECORDER_CONFIGURABLE_START_DELAY_V1
+
+    private enum Completion {NONE, PAUSE, SEND, DISCARD}
+
+    private final Context applicationContext;
+    private final TextureView preview;
+    private final Listener listener;
+    private final Handler main = new Handler(Looper.getMainLooper());
+    private VideoMessageRecorder recorder;
+    private Surface surface;
+    // Consumed by the next startRecording() call only; a later resume segment after a pause
+    // falls back to the library's own temp file so VideoMessageSegmentMerger still has a plain
+    // file to merge against. Call setNextOutputFile() again before each first segment.
+    private File pendingOutputFile;
+    private boolean pendingStart;
+    private boolean startRequested;
+    private boolean recordStarted;
+    private boolean cameraReadyNotified;
+    private boolean previewHasFrame;
+    private boolean cameraReadyForStart;
+    private boolean startDelayScheduled;
+    private Completion completion = Completion.NONE;
+    private long startedAt;
+    private long stoppedDurationMs;
+    // Coalesce touch events within one main-loop iteration. The recorder then
+    // submits the latest zoom on its camera executor without a fixed delay.
+    private float zoomRatio = 1f;
+    private float minZoomRatio = 1f;
+    private float maxZoomRatio = 1f;
+    private float lastDispatchedZoomRatio = Float.NaN;
+    private boolean zoomDispatchPending;
+    private CameraRole zoomCameraRole;
+    private final Runnable dispatchZoom = () -> {
+        zoomDispatchPending = false;
+        if (recorder == null || completion != Completion.NONE
+                || zoomRatio == lastDispatchedZoomRatio) return;
+        lastDispatchedZoomRatio = zoomRatio;
+        recorder.updateZoomRatio(zoomRatio);
+    };
+
+    private void cancelPendingZoom() {
+        main.removeCallbacks(dispatchZoom);
+        zoomDispatchPending = false;
+    }
+
+    // Always executes on Android main thread, as do camera-state and TextureView callbacks.
+    private final Runnable startRecordingAfterPreview = this::startRecordingDelayed;
+
+    private void startRecordingDelayed() {
+        startDelayScheduled = false;
+        Log.i("RoundVideoDiag", "startRecordingDelayed: recorder=" + (recorder != null)
+                + " completion=" + completion
+                + " recordStarted=" + recordStarted
+                + " startRequested=" + startRequested
+                + " pendingStart=" + pendingStart
+                + " cameraReadyForStart=" + cameraReadyForStart
+                + " previewHasFrame=" + previewHasFrame
+                + " pendingOutputFile=" + pendingOutputFile);
+        if (recorder == null || completion != Completion.NONE || recordStarted || startRequested
+                || !pendingStart || !cameraReadyForStart || !previewHasFrame) {
+            Log.w("RoundVideoDiag", "startRecordingDelayed ABORTED due to guard condition!");
+            return;
+        }
+        pendingStart = false;
+        startRequested = true;
+        File outputFile = pendingOutputFile;
+        pendingOutputFile = null;
+        Log.i("RoundVideoDiag", "Calling recorder.startRecording(" + outputFile + ")");
+        recorder.startRecording(outputFile);
+    };
+
+    private void scheduleRecordingStartIfReady() {
+        if (recorder == null || completion != Completion.NONE || recordStarted || startRequested
+                || !pendingStart || !cameraReadyForStart || !previewHasFrame
+                || startDelayScheduled) {
+            Log.d("RoundVideoDiag", "scheduleRecordingStartIfReady NOT ready yet:"
+                    + " recorder=" + (recorder != null)
+                    + " completion=" + completion
+                    + " recordStarted=" + recordStarted
+                    + " startRequested=" + startRequested
+                    + " pendingStart=" + pendingStart
+                    + " cameraReadyForStart=" + cameraReadyForStart
+                    + " previewHasFrame=" + previewHasFrame
+                    + " startDelayScheduled=" + startDelayScheduled);
+            return;
+        }
+        long delayMs = RoundVideoRecorderSettings.recordingStartDelayMs(applicationContext);
+        startDelayScheduled = true;
+        Log.i("RoundVideoDiag", "scheduleRecordingStartIfReady: scheduling start in " + delayMs + " ms");
+        main.postDelayed(startRecordingAfterPreview, delayMs);
+    }
+
+    public VideoMessageRecorderAdapter(Context context, TextureView preview, Listener listener) {
+        this.applicationContext = context.getApplicationContext();
+        this.preview = preview;
+        this.listener = listener;
+    }
+
+    /**
+     * Writes the very next startRecording() directly to {@code file} instead of the library's
+     * own cache temp file, avoiding a host-side copy. Must be called before {@link #startSession()}
+     * for the first segment of a recording; do not call it again before a post-pause resume, so
+     * that segment keeps using a plain temp file for {@code VideoMessageSegmentMerger}.
+     */
+    public void setNextOutputFile(File file) {
+        requireMainThread();
+        pendingOutputFile = file;
+    }
+
+    /**
+     * Call once for each video-note session, after Telegram has obtained permissions.
+     */
+    public void startSession() {
+        requireMainThread();
+        Log.i("RoundVideoDiag", "Adapter.startSession() begin, pendingOutputFile=" + pendingOutputFile);
+        disposeRecorder();
+        if (Build.VERSION.SDK_INT < 28) {
+            listener.onError(new UnsupportedOperationException("Recorder requires Android 9 (API 28)+"));
+            return;
+        }
+        if (applicationContext.checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED ||
+                applicationContext.checkSelfPermission(Manifest.permission.RECORD_AUDIO)
+                        != PackageManager.PERMISSION_GRANTED) {
+            Log.e("RoundVideoDiag", "Missing CAMERA or RECORD_AUDIO permission!");
+            listener.onError(new SecurityException("CAMERA and RECORD_AUDIO permissions are required"));
+            return;
+        }
+        completion = Completion.NONE;
+        pendingStart = true;
+        startRequested = false;
+        recordStarted = false;
+        cameraReadyNotified = false;
+        previewHasFrame = false;
+        cameraReadyForStart = false;
+        startDelayScheduled = false;
+        startedAt = 0L;
+        stoppedDurationMs = 0L;
+        cancelPendingZoom();
+        zoomRatio = 1f;
+        minZoomRatio = 1f;
+        maxZoomRatio = 1f;
+        lastDispatchedZoomRatio = Float.NaN;
+        zoomCameraRole = null;
+        // Use explicit constructor parameters, matching the actual 0.0.2 AAR API.
+        // Per-frame capture telemetry is only collected when Telegram logging is enabled, so
+        // release builds pay nothing for it (CaptureTelemetry.onCapture early-returns and no CSV
+        // is written). Users can still flip "Enable logs" in the debug menu to diagnose a device.
+        DiagnosticsMode diagnosticsMode = org.telegram.messenger.BuildVars.LOGS_ENABLED
+                ? DiagnosticsMode.TelemetryCsv
+                : DiagnosticsMode.Disabled;
+        recorder = new VideoMessageRecorder(
+                applicationContext,
+                RoundVideoRecorderSettings.recordingMode(applicationContext),
+                diagnosticsMode,
+                state -> {
+                    main.post(() -> onRecorderState(state));
+                    return Unit.INSTANCE;
+                },
+                result -> {
+                    File file = result.getFile();
+                    saveTelemetryCsv(result.getTelemetryCsv());
+                    main.post(() -> onRecordingFinished(file));
+                    return Unit.INSTANCE;
+                }
+        );
+        // The existing remember-camera setting is the only source of camera restoration.
+        // With it disabled, the recorder starts with its default front camera.
+        if (RoundVideoRecorderSettings.rememberLastCamera(applicationContext)) {
+            boolean rear = RoundVideoRecorderSettings.lastCameraWasRear(applicationContext);
+            Log.i("RoundVideoDiag", "Restoring last camera: rear=" + rear);
+            recorder.restoreLastCamera(rear ? CameraRole.REAR_WIDE : CameraRole.FRONT);
+        }
+        preview.setSurfaceTextureListener(this);
+        Log.i("RoundVideoDiag", "preview.isAvailable()=" + preview.isAvailable()
+                + " w=" + preview.getWidth() + " h=" + preview.getHeight());
+        if (preview.isAvailable()) {
+            attachPreview(preview.getSurfaceTexture(), preview.getWidth(), preview.getHeight());
+        }
+        recorder.setPermissionGranted(true); // actual permissions verified above
+        Log.i("RoundVideoDiag", "Calling recorder.onStart()");
+        recorder.onStart();
+    }
+
+    private void saveTelemetryCsv(String csv) {
+        if (csv == null) return;
+        byte[] data = csv.getBytes(StandardCharsets.UTF_8);
+        File cacheDir = applicationContext.getCacheDir();
+        File sessionFile = new File(cacheDir, "camera_pipeline_" + System.currentTimeMillis() + ".csv");
+        File latestFile = new File(cacheDir, "camera_pipeline_last.csv");
+        try {
+            writeTelemetryCsv(sessionFile, data);
+            writeTelemetryCsv(latestFile, data);
+        } catch (IOException e) {
+            Log.w("RoundVideoTelemetry", "Could not save recording diagnostics", e);
+        }
+    }
+
+    private static void writeTelemetryCsv(File file, byte[] data) throws IOException {
+        try (FileOutputStream output = new FileOutputStream(file)) {
+            output.write(data);
+        }
+    }
+
+    /**
+     * Initiates finalization; file arrives asynchronously via Listener.
+     */
+    public void finishAndSend() {
+        requireMainThread();
+        Log.i("RoundVideoDiag", "finishAndSend: recorder=" + (recorder != null) + " recordStarted=" + recordStarted);
+        if (recorder == null) return;
+        if (!recordStarted) {
+            cancel();
+            return;
+        }
+        completion = Completion.SEND;
+        pendingStart = false;
+        stoppedDurationMs = SystemClock.elapsedRealtime() - startedAt;
+        recorder.stopRecording();
+    }
+
+    public void pauseRecording() {
+        requireMainThread();
+        Log.i("RoundVideoDiag", "pauseRecording: recorder=" + (recorder != null) + " recordStarted=" + recordStarted + " completion=" + completion);
+        if (recorder == null || !recordStarted || completion != Completion.NONE) return;
+        completion = Completion.PAUSE;
+        pendingStart = false;
+        stoppedDurationMs = SystemClock.elapsedRealtime() - startedAt;
+        recorder.stopRecording();
+    }
+
+    public void resumeRecording() {
+        requireMainThread();
+        Log.i("RoundVideoDiag", "resumeRecording: recorder=" + (recorder != null) + " recordStarted=" + recordStarted + " startRequested=" + startRequested);
+        if (recorder == null || recordStarted || startRequested
+                || completion != Completion.NONE || pendingStart) return;
+        pendingStart = true;
+        previewHasFrame = preview.isAvailable();
+        scheduleRecordingStartIfReady();
+    }
+
+    /**
+     * Telegram's swipe-to-cancel: finalize and discard the resulting MP4.
+     */
+    public void cancel() {
+        requireMainThread();
+        Log.i("RoundVideoDiag", "Adapter.cancel(): recorder=" + (recorder != null)
+                + " recordStarted=" + recordStarted + " startRequested=" + startRequested
+                + " pendingStart=" + pendingStart);
+        if (recorder == null) return;
+        completion = Completion.DISCARD;
+        pendingStart = false;
+        if (recordStarted) {
+            recorder.stopRecording();
+        } else {
+            disposeRecorder();
+            listener.onCancelled();
+        }
+    }
+
+    public void switchCamera() {
+        requireMainThread();
+        if (recorder == null || completion != Completion.NONE) return;
+        cancelPendingZoom(); // Do not send a zoom meant for the previous camera.
+        recorder.switchCamera();
+    }
+
+    /**
+     * Absolute zoom ratio. Preserve the latest gesture target while commands are coalesced.
+     */
+    public void zoom(float ratio) {
+        requireMainThread();
+        if (recorder == null || completion != Completion.NONE || !Float.isFinite(ratio)) return;
+        zoomRatio = Math.max(minZoomRatio, Math.min(maxZoomRatio, ratio));
+        if (zoomDispatchPending) return;
+        zoomDispatchPending = true;
+        main.post(dispatchZoom);
+    }
+
+    /**
+     * Last requested (or reported) zoom, used as a pinch gesture's starting point.
+     */
+    public float getZoomRatio() {
+        requireMainThread();
+        return zoomRatio;
+    }
+
+    /**
+     * Call from Telegram's UI destruction path, not after stopRecording().
+     */
+    public void close() {
+        requireMainThread();
+        Log.i("RoundVideoDiag", "Adapter.close()");
+        cancelPendingZoom();
+        disposeRecorder();
+    }
+
+    private void onRecorderState(CameraUiState state) {
+        // The AAR callback may run on a camera or worker thread; this method runs on main.
+        if (recorder == null || completion == Completion.SEND || completion == Completion.DISCARD) return;
+        Log.i("RoundVideoDiag", "onRecorderState:"
+                + " cameraReady=" + state.getCameraReady()
+                + " isBusy=" + state.isBusy()
+                + " isRecording=" + state.isRecording()
+                + " isSwitching=" + state.isSwitchingCamera()
+                + " role=" + state.getActiveCameraRole()
+                + " status=\"" + state.getStatus() + "\""
+                + " selectedFpsRange=" + state.getSelectedFpsRange()
+                + " supportedFpsRanges=" + state.getSupportedFpsRanges()
+                + " fpsHoldActive=" + state.getFpsHoldActive()
+                + " cfgFps=" + state.getConfig().getFrameRate()
+                + " cfgHoldFps=" + state.getConfig().getHoldFpsInLowLight()
+                + " cfgQuality=" + state.getConfig().getQuality()
+                + " supportedQualities=" + state.getCapabilities().getSupportedQualities()
+                + " startRequested=" + startRequested
+                + " pendingStart=" + pendingStart
+                + " recordStarted=" + recordStarted);
+        if (startRequested && state.isRecording()) {
+            startRequested = false;
+            recordStarted = true;
+            startedAt = SystemClock.elapsedRealtime();
+            if (zoomCameraRole != null) {
+                RoundVideoRecorderSettings.setLastCameraWasRear(applicationContext,
+                        zoomCameraRole == CameraRole.REAR_WIDE);
+            }
+            Log.i("RoundVideoDiag", "Recording officially started! Notifying listener.onRecordingStarted()");
+            listener.onRecordingStarted();
+        }
+        android.util.Range<Float> zoomRange = state.getCapabilities().getZoomRatioRange();
+        if (zoomRange != null) {
+            minZoomRatio = zoomRange.getLower();
+            maxZoomRatio = zoomRange.getUpper();
+        }
+        // State callbacks are asynchronous and can carry an OLD zoom. Never
+        // overwrite the gesture target unless the active camera actually changed.
+        if (zoomCameraRole != state.getActiveCameraRole()) {
+            cancelPendingZoom();
+            zoomCameraRole = state.getActiveCameraRole();
+            zoomRatio = state.getConfig().getZoomRatio();
+            lastDispatchedZoomRatio = Float.NaN;
+        }
+        if (state.getCameraReady() && !state.isSwitchingCamera() && recordStarted
+                && state.getActiveCameraRole() != null) {
+            RoundVideoRecorderSettings.setLastCameraWasRear(applicationContext,
+                    state.getActiveCameraRole() == CameraRole.REAR_WIDE);
+        }
+        cameraReadyForStart = state.getCameraReady() && !state.isBusy()
+                && !state.isSwitchingCamera() && !state.isRecording();
+        if (!cameraReadyForStart && startDelayScheduled) {
+            // If camera reconfigures while waiting, restart the delay once it's ready again.
+            Log.w("RoundVideoDiag", "Camera became not-ready while startDelayScheduled; cancelling delayed start");
+            main.removeCallbacks(startRecordingAfterPreview);
+            startDelayScheduled = false;
+        }
+        if (state.getCameraReady() && !state.isBusy() && !state.isSwitchingCamera()) {
+            if (!cameraReadyNotified) {
+                cameraReadyNotified = true;
+                Log.i("RoundVideoDiag", "Camera ready for first time -> listener.onCameraReady()");
+                listener.onCameraReady();
+            }
+        }
+        scheduleRecordingStartIfReady();
+    }
+
+    private void onRecordingFinished(File file) {
+        Log.i("RoundVideoDiag", "onRecordingFinished: file=" + file + " exists=" + (file != null && file.exists())
+                + " len=" + (file != null ? file.length() : -1) + " completion=" + completion);
+        if (recorder == null) {
+            // This adapter no longer owns the session. Avoid stale callbacks.
+            file.delete();
+            return;
+        }
+        Completion action = completion;
+        long durationMs = stoppedDurationMs;
+        if (action == Completion.PAUSE) {
+            completion = Completion.NONE;
+            recordStarted = false;
+            startedAt = 0L;
+            listener.onRecordingPaused(file, durationMs);
+            return;
+        }
+        disposeRecorder();
+        if (action == Completion.SEND) {
+            listener.onVideoNoteReady(file, durationMs);
+        } else {
+            file.delete();
+            listener.onCancelled();
+        }
+    }
+
+    private void attachPreview(SurfaceTexture texture, int width, int height) {
+        Log.i("RoundVideoDiag", "attachPreview: recorder=" + (recorder != null) + " texture=" + (texture != null) + " w=" + width + " h=" + height);
+        if (recorder == null || texture == null || width <= 0 || height <= 0) return;
+        if (surface != null) {
+            recorder.detachPreview();
+            surface.release();
+        }
+        surface = new Surface(texture);
+        Display display = preview.getDisplay();
+        int rotation = display == null ? Surface.ROTATION_0 : display.getRotation();
+        recorder.attachPreview(surface, width, height, rotation);
+    }
+
+    private void disposeRecorder() {
+        main.removeCallbacks(startRecordingAfterPreview);
+        startDelayScheduled = false;
+        cameraReadyForStart = false;
+        previewHasFrame = false;
+        pendingStart = false;
+        startRequested = false;
+        recordStarted = false;
+        if (recorder != null) {
+            recorder.detachPreview();
+            recorder.onStop();
+            recorder.close();
+            recorder = null;
+        }
+        if (surface != null) {
+            surface.release();
+            surface = null;
+        }
+        if (preview.getSurfaceTextureListener() == this) {
+            preview.setSurfaceTextureListener(null);
+        }
+    }
+
+    private static void requireMainThread() {
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            throw new IllegalStateException("VideoMessageRecorderAdapter must run on main thread");
+        }
+    }
+
+    @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture st, int w, int h) {
+        Log.i("RoundVideoDiag", "onSurfaceTextureAvailable: w=" + w + " h=" + h);
+        attachPreview(st, w, h);
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture st, int w, int h) {
+        Log.i("RoundVideoDiag", "onSurfaceTextureSizeChanged: w=" + w + " h=" + h + " surface=" + (surface != null));
+        // Do not recreate the camera pipeline during an active recording.
+        if (surface == null) attachPreview(st, w, h);
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture st) {
+        Log.i("RoundVideoDiag", "onSurfaceTextureDestroyed");
+        if (recorder != null) recorder.detachPreview();
+        if (surface != null) surface.release();
+        surface = null;
+        return true; // TextureView releases the SurfaceTexture itself.
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture st) {
+        if (!previewHasFrame && recorder != null && completion == Completion.NONE) {
+            previewHasFrame = true;
+            Log.i("RoundVideoDiag", "onSurfaceTextureUpdated: first preview frame received!");
+            scheduleRecordingStartIfReady();
+        }
+    }
+}

@@ -1,0 +1,67 @@
+name: Apply Zefgram fixes
+on:
+  workflow_dispatch:
+    inputs:
+      donate_url:
+        description: Link for the Donate button in Settings
+        required: true
+        default: https://github.com/zefronxd
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: easygram-dev
+
+      - name: Apply fixes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DONATE_URL: ${{ inputs.donate_url }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          export REPO_ID=$(gh api "repos/${GITHUB_REPOSITORY}" --jq .id)
+          export REPO_SLUG="${GITHUB_REPOSITORY}"
+          export OWNER="${GITHUB_REPOSITORY_OWNER}"
+          python3 - <<'EOF'
+          import os, pathlib, sys
+
+          def patch(path, pairs):
+              p = pathlib.Path(path)
+              s = p.read_text(encoding='utf-8')
+              for old, new in pairs:
+                  if old not in s:
+                      sys.exit(f"NOT FOUND in {path}: {old}")
+                  s = s.replace(old, new)
+              p.write_text(s, encoding='utf-8')
+
+          slug = os.environ['REPO_SLUG']
+          owner = os.environ['OWNER']
+          repo_id = os.environ['REPO_ID']
+
+          patch('TMessagesProj/src/main/java/org/telegram/ui/Components/ZefgramUpdater.java', [
+              ('raw.githubusercontent.com/webarmour/zefgram/zefgram-dev/updates/',
+               f'raw.githubusercontent.com/{slug}/easygram-dev/updates/'),
+              ('/repositories/1423703156/releases', f'/repositories/{repo_id}/releases'),
+              ('github\\\\.com/webarmour/', f'github\\\\.com/{owner}/'),
+          ])
+
+          patch('TMessagesProj/src/main/java/org/telegram/ui/SettingsActivity.java', [
+              ('https://boosty.to/webarmour/donate', os.environ['DONATE_URL']),
+          ])
+          print("OK")
+          EOF
+          git diff --stat
+
+      - name: Commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m "Point updater and donate link to Zefgram"
+          git push origin HEAD:easygram-dev
