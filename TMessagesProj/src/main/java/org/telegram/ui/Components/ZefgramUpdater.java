@@ -52,13 +52,13 @@ public final class ZefgramUpdater {
     // Public GitHub feed; no token required. Releases are fetched by the numeric repository
     // ID so renaming the repo (including case-only renames) never breaks update checks.
     private static final String FEED_BASE =
-            "https://raw.githubusercontent.com/webarmour/zefgram/zefgram-dev/updates/";
+            "https://raw.githubusercontent.com/zefronxd/tirai/easygram-dev/updates/";
     private static final String RELEASES_URL =
-            "https://api.github.com/repositories/1423703156/releases?per_page=100"; // zefronxd/tirai
+            "https://api.github.com/repositories/1467323862/releases?per_page=100"; // zefronxd/tirai
     // Any repo name of this owner, any case: GitHub builds asset URLs from the current repo name.
     // The APK is still verified by SHA-256 from the API and by the installed signing certificate.
     private static final Pattern RELEASE_ASSET_URL = Pattern.compile(
-            "^https://github\\.com/webarmour/[A-Za-z0-9._-]+/releases/download/[^?#]+\\.apk$",
+            "^https://github\\.com/zefronxd/[A-Za-z0-9._-]+/releases/download/[^?#]+\\.apk$",
             Pattern.CASE_INSENSITIVE);
     private static final Pattern RELEASE_TAG_STABLE =
             Pattern.compile("^v?(\\d+(?:\\.\\d+){1,3})-(\\d+)$");

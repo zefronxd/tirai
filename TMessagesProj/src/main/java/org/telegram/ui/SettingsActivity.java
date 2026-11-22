@@ -989,7 +989,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 if (getParentActivity() == null) {
                     break;
                 }
-                final String donateUrl = "https://boosty.to/webarmour/donate";
+                final String donateUrl = "https://github.com/zefronxd";
                 QRCodeBottomSheet sheet = new QRCodeBottomSheet(
                         getParentActivity(),
                         getString(R.string.ZefgramSupportAuthor),
