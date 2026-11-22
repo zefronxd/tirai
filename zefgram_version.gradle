@@ -1,0 +1,44 @@
+/*
+ * This file is part of zefgram, a fork of Telegram for Android.
+ * It is licensed under GNU GPL v. 2 or later.
+ * You should have received a copy of the license in this archive (see LICENSE).
+ *
+ * Copyright webarmour, 2026.
+ */
+
+// Automatic versionCode: EASYGRAM_VERSION_BASE + first-parent commits since EASYGRAM_VERSION_ANCHOR
+// (zefgram_version.properties). Applied from the root build.gradle; overrides APP_VERSION_CODE for all modules,
+// so nothing has to be bumped by hand. Uncommitted changes build with the code of the current commit.
+
+def zefgramVersionProps = new Properties()
+rootProject.file('zefgram_version.properties').withInputStream { zefgramVersionProps.load(it) }
+def zefgramVersionBase = Integer.parseInt(zefgramVersionProps.getProperty('EASYGRAM_VERSION_BASE').trim())
+def zefgramVersionAnchor = zefgramVersionProps.getProperty('EASYGRAM_VERSION_ANCHOR').trim()
+
+def zefgramCommitsSinceAnchor = {
+    try {
+        def process = ['git', 'rev-list', '--first-parent', '--count', "${zefgramVersionAnchor}..HEAD"]
+                .execute(null, rootProject.rootDir)
+        def out = process.text.trim()
+        if (process.waitFor() == 0 && out ==~ /\d+/) {
+            return Integer.parseInt(out)
+        }
+        logger.warn("zefgram: can't count commits since ${zefgramVersionAnchor} (shallow clone? not a git checkout?), versionCode = base")
+    } catch (Exception e) {
+        logger.warn("zefgram: git is not available (${e.message}), versionCode = base")
+    }
+    return 0
+}
+
+def zefgramVersionCode = String.valueOf(zefgramVersionBase + zefgramCommitsSinceAnchor())
+
+allprojects {
+    ext.APP_VERSION_CODE = zefgramVersionCode
+}
+
+tasks.register('zefgramVersionCode') {
+    description = 'Prints the automatic zefgram versionCode base (the APK/AAB versionCode is this * 10 + ABI code).'
+    doLast {
+        println zefgramVersionCode
+    }
+}
