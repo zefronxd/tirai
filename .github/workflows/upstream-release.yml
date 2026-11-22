@@ -24,7 +24,7 @@ concurrency:
 jobs:
   update-and-release:
     runs-on: ubuntu-24.04
-    timeout-minutes: 120
+    timeout-minutes: 150
     steps:
       - name: Free disk space
         shell: bash
@@ -114,6 +114,21 @@ jobs:
           echo "$SIGNING_KEY" | base64 --decode > "$RUNNER_TEMP/zefgram-release.keystore"
           printf 'sdk.dir=%s\nEASYGRAM_RELEASE_KEYSTORE=%s\nEASYGRAM_RELEASE_STORE_PASSWORD=%s\nEASYGRAM_RELEASE_KEY_ALIAS=%s\nEASYGRAM_RELEASE_KEY_PASSWORD=%s\nTELEGRAM_API_ID=%s\nTELEGRAM_API_HASH=%s\n' \
             "$ANDROID_HOME" "$RUNNER_TEMP/zefgram-release.keystore" "$STORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" "$TELEGRAM_API_ID" "$TELEGRAM_API_HASH" > local.properties
+
+      - name: Add swap and tune Gradle memory
+        if: steps.update.outputs.changed == 'true'
+        shell: bash
+        run: |
+          set -euo pipefail
+          free -h
+          df -h /
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+          nproc
+          printf '\norg.gradle.jvmargs=-Xmx5g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8\norg.gradle.workers.max=2\n' >> gradle.properties
 
       - name: Compute version code
         if: steps.update.outputs.changed == 'true'
