@@ -687,7 +687,7 @@ public class SharedConfig {
             callEncryptionHintDisplayedCount = preferences.getInt("callEncryptionHintDisplayedCount", 0);
             debugVideoQualities = preferences.getBoolean("debugVideoQualities", false);
             debugViewMetrics = preferences.getBoolean("debugViewMetrics", false);
-            photoHighQualityDefault = preferences.getBoolean("easygram_send_media_hd", preferences.getBoolean("photoHighQualityDefault", false));
+            photoHighQualityDefault = preferences.getBoolean("zefgram_send_media_hd", preferences.getBoolean("photoHighQualityDefault", false));
             photoLiveDefault = preferences.getBoolean("photoLiveDefault", false);
 
             loadDebugConfig(preferences);

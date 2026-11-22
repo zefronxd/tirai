@@ -15,8 +15,8 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:actionBarStyle">@style/ActionBar.Transparent.TMessages.Start</item>
-        <item name="android:colorBackground">@color/easygram_bloom_blue_light_background</item>
-        <item name="android:windowBackground">@color/easygram_bloom_blue_light_background</item>
+        <item name="android:colorBackground">@color/zefgram_bloom_blue_light_background</item>
+        <item name="android:windowBackground">@color/zefgram_bloom_blue_light_background</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:colorPrimaryDark">#426482</item>
         <item name="android:colorPrimary">#527da3</item>
@@ -26,13 +26,13 @@
     </style>
 
     <style name="Theme.TMessages.Start.BloomDark" parent="Theme.TMessages.Start">
-        <item name="android:colorBackground">@color/easygram_bloom_blue_dark_background</item>
-        <item name="android:windowBackground">@color/easygram_bloom_blue_dark_background</item>
+        <item name="android:colorBackground">@color/zefgram_bloom_blue_dark_background</item>
+        <item name="android:windowBackground">@color/zefgram_bloom_blue_dark_background</item>
     </style>
 
     <style name="Theme.TMessages.Start.BloomMono" parent="Theme.TMessages.Start">
-        <item name="android:colorBackground">@color/easygram_bloom_mono_background</item>
-        <item name="android:windowBackground">@color/easygram_bloom_mono_background</item>
+        <item name="android:colorBackground">@color/zefgram_bloom_mono_background</item>
+        <item name="android:windowBackground">@color/zefgram_bloom_mono_background</item>
     </style>
 
     <style name="Theme.TMessages" parent="Theme.AppCompat.Light">

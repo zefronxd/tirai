@@ -6949,8 +6949,8 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     @Override
     public void onResume() {
         super.onResume();
-        // the "easygram / Telegram" title switch may have been changed in settings
-        if (logoDrawable != null && logoIsEasygram != OtherSettingsActivity.isEasygramTitleEnabled() && getContext() != null) {
+        // the "zefgram / Telegram" title switch may have been changed in settings
+        if (logoDrawable != null && logoIsZefgram != OtherSettingsActivity.isZefgramTitleEnabled() && getContext() != null) {
             setDialogsLogoTitle(getContext());
         }
         if (dialogStoriesCell != null) {
@@ -12438,7 +12438,7 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         boolean onlySelfStories = !isArchive() && getStoriesController().hasOnlySelfStories();
         boolean newVisibility;
         if (ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE)
-                .getBoolean("easygram_disable_stories", false) || communityId != 0) {
+                .getBoolean("zefgram_disable_stories", false) || communityId != 0) {
             newVisibility = false;
             onlySelfStories = false;
         } else if (isArchive()) {
@@ -14169,13 +14169,13 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
     }
 
     private int lastLogoDrawableColor;
-    private boolean logoIsEasygram;
+    private boolean logoIsZefgram;
 
-    /** Main chat list title: the "easygram" wordmark (default) or the original Telegram logo, see settings. */
+    /** Main chat list title: the "zefgram" wordmark (default) or the original Telegram logo, see settings. */
     private void setDialogsLogoTitle(Context context) {
-        logoIsEasygram = OtherSettingsActivity.isEasygramTitleEnabled();
-        if (logoIsEasygram) {
-            logoDrawable = new EasygramLogoDrawable(context.getResources().getDrawable(R.drawable.telegram_logo_2).getIntrinsicHeight());
+        logoIsZefgram = OtherSettingsActivity.isZefgramTitleEnabled();
+        if (logoIsZefgram) {
+            logoDrawable = new ZefgramLogoDrawable(context.getResources().getDrawable(R.drawable.telegram_logo_2).getIntrinsicHeight());
         } else {
             logoDrawable = context.getResources().getDrawable(R.drawable.telegram_logo_2).mutate();
         }
@@ -14183,22 +14183,22 @@ public class DialogsActivity extends BaseFragment implements NotificationCenter.
         // a new drawable (also when the view is recreated after a theme switch made elsewhere): remember its tint, the
         // theme hook only recolors when the color differs from the last one applied
         logoDrawable.setColorFilter(lastLogoDrawableColor = getThemedColor(Theme.key_telegram_color_dialogsLogo), PorterDuff.Mode.MULTIPLY);
-        SpannableStringBuilder ssb = new SpannableStringBuilder(logoIsEasygram ? "easygram" : "Telegram");
+        SpannableStringBuilder ssb = new SpannableStringBuilder(logoIsZefgram ? "zefgram" : "Telegram");
         ssb.setSpan(new ImageSpan(logoDrawable), 0, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         actionBar.setTitle(ssb, statusDrawable);
     }
 
     /**
-     * "easygram" wordmark drawn as text, sized like the Telegram logo vector (same height and baseline, matching
+     * "zefgram" wordmark drawn as text, sized like the Telegram logo vector (same height and baseline, matching
      * x-height) so it sits in the title exactly where the logo did. White, tinted by a colour filter like the logo.
      */
-    private static class EasygramLogoDrawable extends Drawable {
-        private static final String TEXT = "easygram";
+    private static class ZefgramLogoDrawable extends Drawable {
+        private static final String TEXT = "zefgram";
         private final android.text.TextPaint paint = new android.text.TextPaint(Paint.ANTI_ALIAS_FLAG);
         private final int width, height;
         private final float baseline;
 
-        EasygramLogoDrawable(int logoHeight) {
+        ZefgramLogoDrawable(int logoHeight) {
             height = logoHeight;
             paint.setColor(0xFFFFFFFF);
             paint.setTypeface(AndroidUtilities.bold());

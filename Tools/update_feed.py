@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-# This file is part of easygram, a fork of Telegram for Android.
+# This file is part of zefgram, a fork of Telegram for Android.
 # It is licensed under GNU GPL v. 2 or later.
 # You should have received a copy of the license in this archive (see LICENSE).
 #
 # Copyright webarmour, 2026.
 
-"""Prepare a signed APK update feed entry for Easygram."""
+"""Prepare a signed APK update feed entry for Zefgram."""
 
 import argparse
 import hashlib
@@ -20,9 +20,9 @@ from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parents[1]
 PACKAGES = {
-    "beta": "io.github.webarmour.easygram.beta",
-    "stable": "io.github.webarmour.easygram",
-    "web": "io.github.webarmour.easygram.web",
+    "beta": "io.github.zefronxd.zefgram.beta",
+    "stable": "io.github.zefronxd.zefgram",
+    "web": "io.github.zefronxd.zefgram.web",
 }
 
 

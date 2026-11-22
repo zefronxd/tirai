@@ -2023,11 +2023,11 @@ JNIEXPORT void Java_org_telegram_utils_recorder_audio_AudioNoiseSuppressor_nDest
     );
 }
 
-// easygram: Ogg/Opus reader for on-device voice transcription (org.telegram.messenger.asr.EasygramAsrAudio).
+// zefgram: Ogg/Opus reader for on-device voice transcription (org.telegram.messenger.asr.ZefgramAsrAudio).
 // Copyright webarmour, 2026. Decodes to mono float PCM at 48 kHz, in chunks, so long voice messages never
 // have to be held in memory as one buffer.
 
-JNIEXPORT jlong Java_org_telegram_messenger_asr_EasygramAsrAudio_nOpenOpus(JNIEnv *env, jclass clazz, jstring path) {
+JNIEXPORT jlong Java_org_telegram_messenger_asr_ZefgramAsrAudio_nOpenOpus(JNIEnv *env, jclass clazz, jstring path) {
     const char *pathStr = (*env)->GetStringUTFChars(env, path, 0);
     if (pathStr == NULL) {
         return 0;
@@ -2044,7 +2044,7 @@ JNIEXPORT jlong Java_org_telegram_messenger_asr_EasygramAsrAudio_nOpenOpus(JNIEn
     return (jlong) (intptr_t) file;
 }
 
-JNIEXPORT jlong Java_org_telegram_messenger_asr_EasygramAsrAudio_nTotalOpusSamples(JNIEnv *env, jclass clazz, jlong handle) {
+JNIEXPORT jlong Java_org_telegram_messenger_asr_ZefgramAsrAudio_nTotalOpusSamples(JNIEnv *env, jclass clazz, jlong handle) {
     OggOpusFile *file = (OggOpusFile *) (intptr_t) handle;
     if (file == NULL) {
         return 0;
@@ -2054,7 +2054,7 @@ JNIEXPORT jlong Java_org_telegram_messenger_asr_EasygramAsrAudio_nTotalOpusSampl
 }
 
 // Fills `out` with up to out.length mono samples; returns their count, 0 at the end, < 0 on a decode error.
-JNIEXPORT jint Java_org_telegram_messenger_asr_EasygramAsrAudio_nReadOpus(JNIEnv *env, jclass clazz, jlong handle, jfloatArray out) {
+JNIEXPORT jint Java_org_telegram_messenger_asr_ZefgramAsrAudio_nReadOpus(JNIEnv *env, jclass clazz, jlong handle, jfloatArray out) {
     OggOpusFile *file = (OggOpusFile *) (intptr_t) handle;
     if (file == NULL || out == NULL) {
         return -1;
@@ -2093,7 +2093,7 @@ JNIEXPORT jint Java_org_telegram_messenger_asr_EasygramAsrAudio_nReadOpus(JNIEnv
     return written;
 }
 
-JNIEXPORT void Java_org_telegram_messenger_asr_EasygramAsrAudio_nCloseOpus(JNIEnv *env, jclass clazz, jlong handle) {
+JNIEXPORT void Java_org_telegram_messenger_asr_ZefgramAsrAudio_nCloseOpus(JNIEnv *env, jclass clazz, jlong handle) {
     OggOpusFile *file = (OggOpusFile *) (intptr_t) handle;
     if (file != NULL) {
         op_free(file);

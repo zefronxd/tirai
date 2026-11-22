@@ -1210,13 +1210,13 @@ public class SecretMediaViewer implements NotificationCenter.NotificationCenterD
             Uri savedUri = null;
             File savedFile = null;
             try {
-                String filename = "Easygram_Screenshot_" + System.currentTimeMillis() + ".png";
+                String filename = "Zefgram_Screenshot_" + System.currentTimeMillis() + ".png";
                 if (Build.VERSION.SDK_INT >= 29) {
                     ContentValues values = new ContentValues();
                     values.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
                     values.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
                     values.put(MediaStore.MediaColumns.RELATIVE_PATH,
-                            Environment.DIRECTORY_PICTURES + "/Easygram");
+                            Environment.DIRECTORY_PICTURES + "/Zefgram");
                     values.put(MediaStore.MediaColumns.IS_PENDING, 1);
                     savedUri = activity.getContentResolver().insert(
                             MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY), values);
@@ -1236,7 +1236,7 @@ public class SecretMediaViewer implements NotificationCenter.NotificationCenterD
                 } else {
                     File directory = new File(
                             Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                            "Easygram");
+                            "Zefgram");
                     if (!directory.isDirectory() && !directory.mkdirs()) {
                         throw new IOException("Could not create screenshot directory");
                     }

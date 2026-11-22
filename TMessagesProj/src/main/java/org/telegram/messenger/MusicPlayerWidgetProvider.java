@@ -1,5 +1,5 @@
 /*
- * This file is part of easygram, a fork of Telegram for Android.
+ * This file is part of zefgram, a fork of Telegram for Android.
  * It is licensed under GNU GPL v. 2 or later.
  * You should have received a copy of the license in this archive (see LICENSE).
  *
@@ -13,7 +13,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.os.Bundle;
 
-/** Home-screen music player widget (Easygram). Rendering and live updates: {@link MusicWidgetUpdater}. */
+/** Home-screen music player widget (Zefgram). Rendering and live updates: {@link MusicWidgetUpdater}. */
 public class MusicPlayerWidgetProvider extends AppWidgetProvider {
 
     @Override

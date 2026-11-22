@@ -1392,8 +1392,8 @@ public class ChatAttachAlertDocumentLayout extends ChatAttachAlert.AttachAlertLa
             listAdapter.items.add(fs);
 
             fs = new ListItem();
-            fs.title = LocaleController.getString(R.string.EasygramPhoto);
-            fs.subtitle = LocaleController.getString(R.string.EasygramTakePhoto);
+            fs.title = LocaleController.getString(R.string.ZefgramPhoto);
+            fs.subtitle = LocaleController.getString(R.string.ZefgramTakePhoto);
             fs.icon = R.drawable.camera;
             fs.file = null;
             listAdapter.items.add(fs);

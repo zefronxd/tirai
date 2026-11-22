@@ -784,9 +784,9 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
             loadTexture(R.drawable.intro_powerful_star, 18);
             loadTexture(R.drawable.intro_private_door, 19);
             loadTexture(R.drawable.intro_private_screw, 20);
-            // The Easygram mark is part of the circular texture; leave the old flying plane empty.
+            // The Zefgram mark is part of the circular texture; leave the old flying plane empty.
             loadTexture(v -> Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888), 21);
-            loadEasygramTexture();
+            loadZefgramTexture();
             loadTexture(telegramMaskProvider, 23);
 
             updateTelegramTextures();
@@ -801,7 +801,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
             return true;
         }
 
-        private void loadEasygramTexture() {
+        private void loadZefgramTexture() {
             final boolean dark = Theme.isCurrentThemeDark();
             final int background = getIntroBackgroundColor();
             loadTexture(v -> {
@@ -812,8 +812,8 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
                 paint.setColor(background);
                 canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint);
                 Drawable mark = ApplicationLoader.applicationContext.getResources().getDrawable(dark
-                        ? R.drawable.ic_easygram_bloom_blue_monochrome
-                        : R.drawable.ic_easygram_bloom_blue_light_foreground).mutate();
+                        ? R.drawable.ic_zefgram_bloom_blue_monochrome
+                        : R.drawable.ic_zefgram_bloom_blue_light_foreground).mutate();
                 int inset = -size / 8;
                 mark.setBounds(inset, inset, size - inset, size - inset);
                 mark.draw(canvas);
@@ -972,7 +972,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
                     eglThread.loadTexture(R.drawable.intro_powerful_mask, 17, getIntroBackgroundColor());
                     eglThread.updatePowerfulTextures();
 
-                    eglThread.loadEasygramTexture();
+                    eglThread.loadZefgramTexture();
                     eglThread.loadTexture(eglThread.telegramMaskProvider, 23);
                     eglThread.updateTelegramTextures();
 
@@ -1064,7 +1064,7 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
                 eglThread.loadTexture(R.drawable.intro_powerful_mask, 17, color);
                 eglThread.updatePowerfulTextures();
 
-                eglThread.loadEasygramTexture();
+                eglThread.loadZefgramTexture();
                 eglThread.loadTexture(eglThread.telegramMaskProvider, 23);
                 eglThread.updateTelegramTextures();
 
@@ -1077,8 +1077,8 @@ public class IntroActivity extends BaseFragment implements NotificationCenter.No
 
     private int getIntroBackgroundColor() {
         return androidx.core.content.ContextCompat.getColor(ApplicationLoader.applicationContext, Theme.isCurrentThemeDark()
-                ? R.color.easygram_bloom_mono_background
-                : R.color.easygram_bloom_blue_light_background);
+                ? R.color.zefgram_bloom_mono_background
+                : R.color.zefgram_bloom_blue_light_background);
     }
 
     @Override

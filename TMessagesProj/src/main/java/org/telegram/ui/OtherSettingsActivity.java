@@ -1,5 +1,5 @@
 /*
- * This file is part of easygram, a fork of Telegram for Android.
+ * This file is part of zefgram, a fork of Telegram for Android.
  * It is licensed under GNU GPL v. 2 or later.
  * You should have received a copy of the license in this archive (see LICENSE).
  *
@@ -59,13 +59,13 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/** Easygram settings for optional app integrations, stories, ads, navigation, and photo viewer menu. */
+/** Zefgram settings for optional app integrations, stories, ads, navigation, and photo viewer menu. */
 public class OtherSettingsActivity extends BaseFragment {
-    public static final String DEFAULT_GALLERY_PACKAGE = "easygram_default_gallery_package";
+    public static final String DEFAULT_GALLERY_PACKAGE = "zefgram_default_gallery_package";
     public static final String EMBEDDED_PHOTO_PICKER = "__embedded_photo_picker__";
 
-    public static final String KEY_PREMIUM_ACCESS = "easygram_premium_access";
-    public static final String KEY_MATERIAL_EXPRESSIVE = "easygram_material3_expressive";
+    public static final String KEY_PREMIUM_ACCESS = "zefgram_premium_access";
+    public static final String KEY_MATERIAL_EXPRESSIVE = "zefgram_material3_expressive";
 
     private static volatile Boolean materialExpressiveCached;
 
@@ -86,7 +86,7 @@ public class OtherSettingsActivity extends BaseFragment {
                 .edit().putBoolean(KEY_MATERIAL_EXPRESSIVE, enabled).apply();
     }
 
-    public static final String KEY_GALLERY_CAMERA = "easygram_gallery_camera";
+    public static final String KEY_GALLERY_CAMERA = "zefgram_gallery_camera";
     private static volatile Boolean galleryCameraCached;
 
     /** Live camera cell at the start of the attach menu photo gallery; off removes the cell (and never opens the camera). */
@@ -106,7 +106,7 @@ public class OtherSettingsActivity extends BaseFragment {
                 .edit().putBoolean(KEY_GALLERY_CAMERA, enabled).apply();
     }
 
-    public static final String KEY_HIDE_KEYBOARD_ON_SCROLL = "easygram_hide_keyboard_on_scroll";
+    public static final String KEY_HIDE_KEYBOARD_ON_SCROLL = "zefgram_hide_keyboard_on_scroll";
     private static volatile Boolean hideKeyboardOnScrollCached;
 
     /** Chat: scrolling up through the messages with the keyboard open closes the keyboard. */
@@ -126,18 +126,18 @@ public class OtherSettingsActivity extends BaseFragment {
                 .edit().putBoolean(KEY_HIDE_KEYBOARD_ON_SCROLL, enabled).apply();
     }
 
-    public static final String KEY_EASYGRAM_TITLE = "easygram_title_in_chats";
+    public static final String KEY_EASYGRAM_TITLE = "zefgram_title_in_chats";
 
-    /** Chat list title: "easygram" (default) or the original "Telegram" logo. */
-    public static boolean isEasygramTitleEnabled() {
-        if (org.telegram.messenger.EasygramBuild.isPlayStore()) {
+    /** Chat list title: "zefgram" (default) or the original "Telegram" logo. */
+    public static boolean isZefgramTitleEnabled() {
+        if (org.telegram.messenger.ZefgramBuild.isPlayStore()) {
             return true; // Play build: never the Telegram logo (the switch is hidden there)
         }
         return ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE)
                 .getBoolean(KEY_EASYGRAM_TITLE, true);
     }
 
-    public static final String KEY_M3E_VOICE = "easygram_m3e_voice";
+    public static final String KEY_M3E_VOICE = "zefgram_m3e_voice";
     private static volatile Boolean m3eVoiceCached;
 
     /** M3E look of voice messages in chats (wave, play button); off keeps the stock voice messages while M3E is on. */
@@ -160,7 +160,7 @@ public class OtherSettingsActivity extends BaseFragment {
                 .edit().putBoolean(KEY_M3E_VOICE, enabled).apply();
     }
 
-    public static final String KEY_DOWNLOAD_HAPTIC = "easygram_download_haptic";
+    public static final String KEY_DOWNLOAD_HAPTIC = "zefgram_download_haptic";
     private static volatile Boolean downloadHapticCached;
 
     /** M3E: a short haptic tap together with the bounce of the download button when a download finishes. */
@@ -183,7 +183,7 @@ public class OtherSettingsActivity extends BaseFragment {
                 .edit().putBoolean(KEY_DOWNLOAD_HAPTIC, enabled).apply();
     }
 
-    public static final String KEY_MINI_PLAYER_DETAILED_WAVE = "easygram_mini_player_detailed_wave";
+    public static final String KEY_MINI_PLAYER_DETAILED_WAVE = "zefgram_mini_player_detailed_wave";
     private static volatile Boolean miniPlayerDetailedWaveCached;
 
     /** M3E mini player (top bar): loudness waveform like in the chat / full player instead of the plain wave. */
@@ -200,7 +200,7 @@ public class OtherSettingsActivity extends BaseFragment {
         return cached;
     }
 
-    public static final String KEY_MINI_PLAYER_VOICE_DETAILED_WAVE = "easygram_mini_player_voice_detailed_wave";
+    public static final String KEY_MINI_PLAYER_VOICE_DETAILED_WAVE = "zefgram_mini_player_voice_detailed_wave";
     private static volatile Boolean miniPlayerVoiceDetailedWaveCached;
 
     /** Same choice as {@link #isMiniPlayerDetailedWaveEnabled()}, but for voice messages / round videos (set separately). */
@@ -237,14 +237,14 @@ public class OtherSettingsActivity extends BaseFragment {
                 .edit().putBoolean(KEY_MINI_PLAYER_DETAILED_WAVE, enabled).apply();
     }
 
-    public static final String KEY_TAB_CHATS = "easygram_tab_chats";
-    public static final String KEY_TAB_CONTACTS = "easygram_tab_contacts";
-    public static final String KEY_TAB_CALLS = "easygram_tab_calls";
-    public static final String KEY_TAB_SETTINGS = "easygram_tab_settings";
-    public static final String KEY_TAB_PROFILE = "easygram_tab_profile";
+    public static final String KEY_TAB_CHATS = "zefgram_tab_chats";
+    public static final String KEY_TAB_CONTACTS = "zefgram_tab_contacts";
+    public static final String KEY_TAB_CALLS = "zefgram_tab_calls";
+    public static final String KEY_TAB_SETTINGS = "zefgram_tab_settings";
+    public static final String KEY_TAB_PROFILE = "zefgram_tab_profile";
 
-    public static final String KEY_TAB_ORDER = "easygram_tab_order";
-    public static final String KEY_HIDE_NAV_LABELS = "easygram_hide_nav_labels";
+    public static final String KEY_TAB_ORDER = "zefgram_tab_order";
+    public static final String KEY_HIDE_NAV_LABELS = "zefgram_hide_nav_labels";
     public static final String DEFAULT_TAB_ORDER = "0,1,2,3,4";
 
     public static final int INDEX_CHATS = 0;
@@ -253,9 +253,9 @@ public class OtherSettingsActivity extends BaseFragment {
     public static final int INDEX_SETTINGS = 3;
     public static final int INDEX_PROFILE = 4;
 
-    public static final String KEY_PHOTO_MENU_ORDER = "easygram_photo_menu_order";
+    public static final String KEY_PHOTO_MENU_ORDER = "zefgram_photo_menu_order";
     public static final String DEFAULT_PHOTO_MENU_ORDER = "0,1,2,3,4,5,6,7";
-    public static final String KEY_PHOTO_MENU_ENABLED_PREFIX = "easygram_photo_menu_enabled_";
+    public static final String KEY_PHOTO_MENU_ENABLED_PREFIX = "zefgram_photo_menu_enabled_";
 
     public static final int INDEX_PHOTO_MENU_SAVE = 0;
     public static final int INDEX_PHOTO_MENU_SHOWALL = 1;
@@ -272,7 +272,7 @@ public class OtherSettingsActivity extends BaseFragment {
 
     // Secret media actions are available only in the debug build type.
     public static final boolean SECRET_MEDIA_ACTIONS_ENABLED = BuildConfig.DEBUG;
-    private static final String KEY_SECRET_MEDIA_ACTIONS = "easygram_secret_media_actions";
+    private static final String KEY_SECRET_MEDIA_ACTIONS = "zefgram_secret_media_actions";
 
     public static boolean isSecretMediaActionsEnabled() {
         return SECRET_MEDIA_ACTIONS_ENABLED && ApplicationLoader.applicationContext
@@ -298,8 +298,8 @@ public class OtherSettingsActivity extends BaseFragment {
     private int adsInfoRow;
     private int showStarMessagesRow;
     private int starMessagesInfoRow;
-    private int easygramTitleRow;
-    private int easygramTitleInfoRow;
+    private int zefgramTitleRow;
+    private int zefgramTitleInfoRow;
     private int navHeaderRow;
     private int navLabelsRow;
     private int navStartRow;
@@ -462,17 +462,17 @@ public class OtherSettingsActivity extends BaseFragment {
     private String getSelectedGalleryLabel() {
         String packageName = preferences().getString(DEFAULT_GALLERY_PACKAGE, null);
         if (packageName == null) {
-            return LocaleController.getString(R.string.EasygramBuiltInGallery);
+            return LocaleController.getString(R.string.ZefgramBuiltInGallery);
         }
         if (EMBEDDED_PHOTO_PICKER.equals(packageName)) {
-            return LocaleController.getString(R.string.EasygramEmbeddedPhotoPicker);
+            return LocaleController.getString(R.string.ZefgramEmbeddedPhotoPicker);
         }
         try {
             return getParentActivity().getPackageManager()
                     .getApplicationLabel(getParentActivity().getPackageManager().getApplicationInfo(packageName, 0))
                     .toString();
         } catch (Exception ignored) {
-            return LocaleController.getString(R.string.EasygramBuiltInGallery);
+            return LocaleController.getString(R.string.ZefgramBuiltInGallery);
         }
     }
 
@@ -495,12 +495,12 @@ public class OtherSettingsActivity extends BaseFragment {
         adsInfoRow = rowCount++;
         showStarMessagesRow = rowCount++;
         starMessagesInfoRow = rowCount++;
-        if (org.telegram.messenger.EasygramBuild.isPlayStore()) {
-            easygramTitleRow = -1;
-            easygramTitleInfoRow = -1;
+        if (org.telegram.messenger.ZefgramBuild.isPlayStore()) {
+            zefgramTitleRow = -1;
+            zefgramTitleInfoRow = -1;
         } else {
-            easygramTitleRow = rowCount++;
-            easygramTitleInfoRow = rowCount++;
+            zefgramTitleRow = rowCount++;
+            zefgramTitleInfoRow = rowCount++;
         }
         secretMediaRow = SECRET_MEDIA_ACTIONS_ENABLED ? rowCount++ : -1;
         navHeaderRow = rowCount++;
@@ -530,7 +530,7 @@ public class OtherSettingsActivity extends BaseFragment {
     public View createView(Context context) {
         actionBar.setBackButtonImage(R.drawable.ic_ab_back);
         actionBar.setAllowOverlayTitle(true);
-        actionBar.setTitle(LocaleController.getString(R.string.EasygramOther));
+        actionBar.setTitle(LocaleController.getString(R.string.ZefgramOther));
         actionBar.setActionBarMenuOnItemClick(new org.telegram.ui.ActionBar.ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(int id) {
@@ -582,9 +582,9 @@ public class OtherSettingsActivity extends BaseFragment {
                     ((TextCheckCell) view).setChecked(next);
                 }
             } else if (position == sendMediaHdRow) {
-                boolean current = preferences().getBoolean("easygram_send_media_hd", SharedConfig.photoHighQualityDefault);
+                boolean current = preferences().getBoolean("zefgram_send_media_hd", SharedConfig.photoHighQualityDefault);
                 boolean next = !current;
-                preferences().edit().putBoolean("easygram_send_media_hd", next).apply();
+                preferences().edit().putBoolean("zefgram_send_media_hd", next).apply();
                 SharedConfig.photoHighQualityDefault = next;
                 ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Activity.MODE_PRIVATE)
                         .edit().putBoolean("photoHighQualityDefault", next).apply();
@@ -604,9 +604,9 @@ public class OtherSettingsActivity extends BaseFragment {
                     ((TextCheckCell) view).setChecked(next);
                 }
             } else if (position == disableStoriesRow) {
-                boolean current = preferences().getBoolean("easygram_disable_stories", false);
+                boolean current = preferences().getBoolean("zefgram_disable_stories", false);
                 boolean next = !current;
-                preferences().edit().putBoolean("easygram_disable_stories", next).apply();
+                preferences().edit().putBoolean("zefgram_disable_stories", next).apply();
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(next);
                 }
@@ -614,9 +614,9 @@ public class OtherSettingsActivity extends BaseFragment {
                 NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.storiesEnabledUpdate);
                 NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.mainTabsLayoutChanged);
             } else if (position == disableAdsRow) {
-                boolean current = preferences().getBoolean("easygram_disable_ads", false);
+                boolean current = preferences().getBoolean("zefgram_disable_ads", false);
                 boolean next = !current;
-                preferences().edit().putBoolean("easygram_disable_ads", next).apply();
+                preferences().edit().putBoolean("zefgram_disable_ads", next).apply();
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(next);
                 }
@@ -624,15 +624,15 @@ public class OtherSettingsActivity extends BaseFragment {
                 NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.storiesUpdated);
                 NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.mainTabsLayoutChanged);
             } else if (position == showStarMessagesRow) {
-                boolean showStars = preferences().getBoolean("easygram_show_star_messages", true);
+                boolean showStars = preferences().getBoolean("zefgram_show_star_messages", true);
                 boolean next = !showStars;
-                preferences().edit().putBoolean("easygram_show_star_messages", next).apply();
+                preferences().edit().putBoolean("zefgram_show_star_messages", next).apply();
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(next);
                 }
                 NotificationCenter.getInstance(currentAccount).postNotificationName(NotificationCenter.updateInterfaces, org.telegram.messenger.MessagesController.UPDATE_MASK_ALL);
-            } else if (position == easygramTitleRow) {
-                boolean next = !isEasygramTitleEnabled();
+            } else if (position == zefgramTitleRow) {
+                boolean next = !isZefgramTitleEnabled();
                 preferences().edit().putBoolean(KEY_EASYGRAM_TITLE, next).apply();
                 if (view instanceof TextCheckCell) {
                     ((TextCheckCell) view).setChecked(next);
@@ -672,7 +672,7 @@ public class OtherSettingsActivity extends BaseFragment {
         if (current && getEnabledTabsCount(preferences(), currentAccount) <= 1) {
             BulletinFactory.of(this).createSimpleBulletin(
                     R.drawable.msg_info,
-                    LocaleController.getString(R.string.EasygramNavMinError)
+                    LocaleController.getString(R.string.ZefgramNavMinError)
             ).show();
             return;
         }
@@ -719,12 +719,12 @@ public class OtherSettingsActivity extends BaseFragment {
         ));
 
         String[] labels = new String[apps.size() + 2];
-        labels[0] = LocaleController.getString(R.string.EasygramBuiltInGallery);
-        labels[1] = LocaleController.getString(R.string.EasygramEmbeddedPhotoPicker);
+        labels[0] = LocaleController.getString(R.string.ZefgramBuiltInGallery);
+        labels[1] = LocaleController.getString(R.string.ZefgramEmbeddedPhotoPicker);
         for (int i = 0; i < apps.size(); i++) labels[i + 2] = apps.get(i).loadLabel(packageManager).toString();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getParentActivity());
-        builder.setTitle(LocaleController.getString(R.string.EasygramDefaultGallery));
+        builder.setTitle(LocaleController.getString(R.string.ZefgramDefaultGallery));
         builder.setItems(labels, (dialog, index) -> {
             SharedPreferences.Editor editor = preferences().edit();
             if (index == 0) {
@@ -831,8 +831,8 @@ public class OtherSettingsActivity extends BaseFragment {
             if (position == headerRow || position == navHeaderRow || position == photoMenuHeaderRow) return 0;
             if (position == galleryRow) return 1;
             if (position == secretMediaRow) return 6;
-            if (position == premiumAccessInfoRow || position == galleryInfoRow || position == sendMediaHdInfoRow || position == galleryCameraInfoRow || position == hideKeyboardOnScrollInfoRow || position == storiesInfoRow || position == adsInfoRow || position == starMessagesInfoRow || position == easygramTitleInfoRow || position == navInfoRow || position == photoMenuInfoRow) return 2;
-            if (position == premiumAccessRow || position == sendMediaHdRow || position == galleryCameraRow || position == hideKeyboardOnScrollRow || position == disableStoriesRow || position == disableAdsRow || position == showStarMessagesRow || position == easygramTitleRow || position == navLabelsRow) return 3;
+            if (position == premiumAccessInfoRow || position == galleryInfoRow || position == sendMediaHdInfoRow || position == galleryCameraInfoRow || position == hideKeyboardOnScrollInfoRow || position == storiesInfoRow || position == adsInfoRow || position == starMessagesInfoRow || position == zefgramTitleInfoRow || position == navInfoRow || position == photoMenuInfoRow) return 2;
+            if (position == premiumAccessRow || position == sendMediaHdRow || position == galleryCameraRow || position == hideKeyboardOnScrollRow || position == disableStoriesRow || position == disableAdsRow || position == showStarMessagesRow || position == zefgramTitleRow || position == navLabelsRow) return 3;
             if (position >= navStartRow && position < navEndRow) return 4;
             if (position >= photoMenuStartRow && position < photoMenuEndRow) return 5;
             return 0;
@@ -875,17 +875,17 @@ public class OtherSettingsActivity extends BaseFragment {
                 case 0:
                     HeaderCell headerCell = (HeaderCell) holder.itemView;
                     if (position == headerRow) {
-                        headerCell.setText(LocaleController.getString(R.string.EasygramOther));
+                        headerCell.setText(LocaleController.getString(R.string.ZefgramOther));
                     } else if (position == navHeaderRow) {
-                        headerCell.setText(LocaleController.getString(R.string.EasygramNavigationBar));
+                        headerCell.setText(LocaleController.getString(R.string.ZefgramNavigationBar));
                     } else if (position == photoMenuHeaderRow) {
-                        headerCell.setText(LocaleController.getString(R.string.EasygramPhotoMenu));
+                        headerCell.setText(LocaleController.getString(R.string.ZefgramPhotoMenu));
                     }
                     break;
                 case 1:
                     TextSettingsCell textCell = (TextSettingsCell) holder.itemView;
                     textCell.setTextAndValue(
-                            LocaleController.getString(R.string.EasygramDefaultGallery),
+                            LocaleController.getString(R.string.ZefgramDefaultGallery),
                             getSelectedGalleryLabel(),
                             false
                     );
@@ -893,34 +893,34 @@ public class OtherSettingsActivity extends BaseFragment {
                 case 2:
                     TextInfoPrivacyCell infoCell = (TextInfoPrivacyCell) holder.itemView;
                     if (position == premiumAccessInfoRow) {
-                        infoCell.setText(AndroidUtilities.replaceTags(LocaleController.getString(R.string.EasygramPremiumAccessInfo)));
+                        infoCell.setText(AndroidUtilities.replaceTags(LocaleController.getString(R.string.ZefgramPremiumAccessInfo)));
                     } else if (position == galleryInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramDefaultGalleryInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramDefaultGalleryInfo));
                     } else if (position == sendMediaHdInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramSendMediaHdInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramSendMediaHdInfo));
                     } else if (position == galleryCameraInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramGalleryCameraInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramGalleryCameraInfo));
                     } else if (position == hideKeyboardOnScrollInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramHideKeyboardOnScrollInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramHideKeyboardOnScrollInfo));
                     } else if (position == storiesInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramDisableStoriesInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramDisableStoriesInfo));
                     } else if (position == adsInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramDisableAdsInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramDisableAdsInfo));
                     } else if (position == starMessagesInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramShowStarMessagesInfo));
-                    } else if (position == easygramTitleInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramTitleInChatsInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramShowStarMessagesInfo));
+                    } else if (position == zefgramTitleInfoRow) {
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramTitleInChatsInfo));
                     } else if (position == navInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramNavigationBarInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramNavigationBarInfo));
                     } else if (position == photoMenuInfoRow) {
-                        infoCell.setText(LocaleController.getString(R.string.EasygramPhotoMenuInfo));
+                        infoCell.setText(LocaleController.getString(R.string.ZefgramPhotoMenuInfo));
                     }
                     break;
                 case 6:
                     TextCheckCell secretMediaCell = (TextCheckCell) holder.itemView;
                     secretMediaCell.setTextAndValueAndCheck(
-                            LocaleController.getString(R.string.EasygramSecretMedia),
-                            LocaleController.getString(R.string.EasygramSecretMediaInfo),
+                            LocaleController.getString(R.string.ZefgramSecretMedia),
+                            LocaleController.getString(R.string.ZefgramSecretMediaInfo),
                             isSecretMediaActionsEnabled(), false, false);
                     break;
                 case 3:
@@ -928,59 +928,59 @@ public class OtherSettingsActivity extends BaseFragment {
                     if (position == premiumAccessRow) {
                         boolean premiumAccess = preferences().getBoolean(KEY_PREMIUM_ACCESS, false);
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramPremiumAccess),
+                                LocaleController.getString(R.string.ZefgramPremiumAccess),
                                 premiumAccess,
                                 true
                         );
                     } else if (position == sendMediaHdRow) {
-                        boolean sendMediaHd = preferences().getBoolean("easygram_send_media_hd", SharedConfig.photoHighQualityDefault);
+                        boolean sendMediaHd = preferences().getBoolean("zefgram_send_media_hd", SharedConfig.photoHighQualityDefault);
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramSendMediaHd),
+                                LocaleController.getString(R.string.ZefgramSendMediaHd),
                                 sendMediaHd,
                                 false
                         );
                     } else if (position == galleryCameraRow) {
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramGalleryCamera),
+                                LocaleController.getString(R.string.ZefgramGalleryCamera),
                                 isGalleryCameraEnabled(),
                                 false
                         );
                     } else if (position == hideKeyboardOnScrollRow) {
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramHideKeyboardOnScroll),
+                                LocaleController.getString(R.string.ZefgramHideKeyboardOnScroll),
                                 isHideKeyboardOnScrollEnabled(),
                                 false
                         );
                     } else if (position == disableStoriesRow) {
-                        boolean disabledStories = preferences().getBoolean("easygram_disable_stories", false);
+                        boolean disabledStories = preferences().getBoolean("zefgram_disable_stories", false);
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramDisableStories),
+                                LocaleController.getString(R.string.ZefgramDisableStories),
                                 disabledStories,
                                 true
                         );
                     } else if (position == disableAdsRow) {
-                        boolean disabledAds = preferences().getBoolean("easygram_disable_ads", false);
+                        boolean disabledAds = preferences().getBoolean("zefgram_disable_ads", false);
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramDisableAds),
+                                LocaleController.getString(R.string.ZefgramDisableAds),
                                 disabledAds,
                                 true
                         );
                     } else if (position == showStarMessagesRow) {
-                        boolean showStarMessages = preferences().getBoolean("easygram_show_star_messages", true);
+                        boolean showStarMessages = preferences().getBoolean("zefgram_show_star_messages", true);
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramShowStarMessages),
+                                LocaleController.getString(R.string.ZefgramShowStarMessages),
                                 showStarMessages,
                                 false
                         );
-                    } else if (position == easygramTitleRow) {
+                    } else if (position == zefgramTitleRow) {
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramTitleInChats),
-                                isEasygramTitleEnabled(),
+                                LocaleController.getString(R.string.ZefgramTitleInChats),
+                                isZefgramTitleEnabled(),
                                 false
                         );
                     } else if (position == navLabelsRow) {
                         checkCell.setTextAndCheck(
-                                LocaleController.getString(R.string.EasygramHideNavLabels),
+                                LocaleController.getString(R.string.ZefgramHideNavLabels),
                                 preferences().getBoolean(KEY_HIDE_NAV_LABELS, false),
                                 true
                         );

@@ -1,5 +1,5 @@
 /*
- * This file is part of easygram, a fork of Telegram for Android.
+ * This file is part of zefgram, a fork of Telegram for Android.
  * It is licensed under GNU GPL v. 2 or later.
  * You should have received a copy of the license in this archive (see LICENSE).
  *
@@ -41,8 +41,8 @@ public class UpdateLayout extends IUpdateLayout {
     private RadialProgress2 updateLayoutIcon;
     private AnimatedTextView updateTextView;
     private AnimatedTextView.AnimatedTextDrawable updateSizeTextView;
-    private boolean easygramMode;
-    private Runnable easygramClick;
+    private boolean zefgramMode;
+    private Runnable zefgramClick;
 
     private final Activity activity;
     private final ViewGroup sideMenuContainer;
@@ -53,22 +53,22 @@ public class UpdateLayout extends IUpdateLayout {
         this.sideMenuContainer = sideMenuContainer;
     }
 
-    /** Enables the Easygram updater without changing Telegram's standalone update flow. */
-    public void setEasygramClickListener(Runnable listener) {
-        easygramMode = true;
-        easygramClick = listener;
+    /** Enables the Zefgram updater without changing Telegram's standalone update flow. */
+    public void setZefgramClickListener(Runnable listener) {
+        zefgramMode = true;
+        zefgramClick = listener;
     }
 
-    /** Render the same native bottom update bar from Easygram's independent update state. */
-    public void updateEasygramState(boolean available, boolean downloading, int percent, boolean ready) {
-        if (!easygramMode || sideMenuContainer == null) return;
+    /** Render the same native bottom update bar from Zefgram's independent update state. */
+    public void updateZefgramState(boolean available, boolean downloading, int percent, boolean ready) {
+        if (!zefgramMode || sideMenuContainer == null) return;
         if (available) {
             createUpdateUI(0);
             updateLayoutIcon.setIcon(downloading ? MediaActionDrawable.ICON_CANCEL
                     : ready ? MediaActionDrawable.ICON_UPDATE : MediaActionDrawable.ICON_DOWNLOAD, true, true);
             updateLayoutIcon.setProgress(downloading ? percent / 100.0f : 0, true);
             updateTextView.setText(downloading ? "Скачивание " + percent + "%"
-                    : ready ? "Установить easygram" : "Обновить easygram", true);
+                    : ready ? "Установить zefgram" : "Обновить zefgram", true);
             updateSizeTextView.setText(null, true);
             if (updateLayout.getTag() == null) {
                 updateLayout.setVisibility(View.VISIBLE);
@@ -86,7 +86,7 @@ public class UpdateLayout extends IUpdateLayout {
     }
 
     public void updateFileProgress(Object[] args) {
-        if (easygramMode || updateTextView == null || args == null) return;
+        if (zefgramMode || updateTextView == null || args == null) return;
         if (SharedConfig.isAppUpdateAvailable()) {
             String location = (String) args[0];
             String fileName = FileLoader.getAttachFileName(SharedConfig.pendingAppUpdate.document);
@@ -107,13 +107,13 @@ public class UpdateLayout extends IUpdateLayout {
         updateLayout = new FrameLayout(activity);
         updateLayout.setVisibility(View.INVISIBLE);
         updateLayout.setTranslationY(dp(44));
-        updateLayout.setBackground(easygramMode
+        updateLayout.setBackground(zefgramMode
                 ? Theme.AdaptiveRipple.filledRectByKey(Theme.key_featuredStickers_addButton, 0)
                 : Theme.getSelectorDrawable(0x40ffffff, false));
         sideMenuContainer.addView(updateLayout, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 44, Gravity.LEFT | Gravity.BOTTOM));
         updateLayout.setOnClickListener(v -> {
-            if (easygramMode) {
-                if (easygramClick != null) easygramClick.run();
+            if (zefgramMode) {
+                if (zefgramClick != null) zefgramClick.run();
                 return;
             }
             if (!SharedConfig.isAppUpdateAvailable()) {
@@ -174,7 +174,7 @@ public class UpdateLayout extends IUpdateLayout {
     }
 
     public void updateAppUpdateViews(int currentAccount, boolean animated) {
-        if (easygramMode) return; // GitHub update state is rendered separately.
+        if (zefgramMode) return; // GitHub update state is rendered separately.
         if (sideMenuContainer == null) {
             return;
         }

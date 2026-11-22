@@ -74,7 +74,7 @@ public class InfiniteProgress {
     public void draw(Canvas canvas, float cx, float cy, float scale) {
         cicleRect.set(cx - radius * scale, cy - radius * scale, cx + radius * scale, cy + radius * scale);
         progressPaint.setStrokeWidth(AndroidUtilities.dp(2) * scale);
-        if (M3ExpressiveLoader.enabled()) { // easygram: Material 3 Expressive shape-morphing indicator
+        if (M3ExpressiveLoader.enabled()) { // zefgram: Material 3 Expressive shape-morphing indicator
             if (m3Morph == null) m3Morph = new M3ExpressiveLoader.Morph();
             m3Morph.draw(canvas, cx, cy, radius * scale, progressPaint.getColor());
         } else {

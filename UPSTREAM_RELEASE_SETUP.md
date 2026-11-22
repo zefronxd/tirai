@@ -1,6 +1,6 @@
 # Automatic upstream releases
 
-The `Upstream merge and stable release` workflow checks `DrKLO/Telegram:master` daily and can also be started with **Actions → Upstream merge and stable release → Run workflow**. When upstream has new commits, it merges them into `easygram-dev`, increments `APP_VERSION_CODE` past both the branch value and existing stable release tags, builds the signed `afatRelease` APK, pushes the merge/version commit, and publishes one stable GitHub Release. A merge conflict or build/signature error stops the run before publishing. The release uses the tag form expected by Easygram's OTA updater.
+The `Upstream merge and stable release` workflow checks `DrKLO/Telegram:master` daily and can also be started with **Actions → Upstream merge and stable release → Run workflow**. When upstream has new commits, it merges them into `zefgram-dev`, increments `APP_VERSION_CODE` past both the branch value and existing stable release tags, builds the signed `afatRelease` APK, pushes the merge/version commit, and publishes one stable GitHub Release. A merge conflict or build/signature error stops the run before publishing. The release uses the tag form expected by Zefgram's OTA updater.
 
 Before enabling it, add these repository Actions secrets under **Settings → Secrets and variables → Actions**:
 

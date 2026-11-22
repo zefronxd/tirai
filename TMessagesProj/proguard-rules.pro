@@ -36,7 +36,7 @@
 -keep class org.telegram.messenger.time.* { *; }
 -keep class org.telegram.messenger.video.* { *; }
 -keep class org.telegram.messenger.voip.* { *; }
-# easygram on-device transcription: sherpa-onnx JNI reads its Kotlin config classes by field name.
+# zefgram on-device transcription: sherpa-onnx JNI reads its Kotlin config classes by field name.
 -keep class com.k2fsa.sherpa.onnx.** { *; }
 -keepclasseswithmembers,includedescriptorclasses class org.telegram.messenger.asr.* {
     native <methods>;

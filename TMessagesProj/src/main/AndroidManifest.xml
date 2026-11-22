@@ -107,8 +107,8 @@
         android:name="org.telegram.messenger.ApplicationLoader"
         android:allowBackup="true"
         android:restoreAnyVersion="true"
-        android:icon="@mipmap/ic_easygram_bloom_blue_dark"
-        android:roundIcon="@mipmap/ic_easygram_bloom_blue_dark_round"
+        android:icon="@mipmap/ic_zefgram_bloom_blue_dark"
+        android:roundIcon="@mipmap/ic_zefgram_bloom_blue_dark_round"
         android:backupAgent=".BackupAgent"
         android:hardwareAccelerated="true"
         android:largeHeap="true"
@@ -128,8 +128,8 @@
             android:enabled="false"
             android:name="org.telegram.messenger.DefaultIcon"
             android:theme="@style/Theme.TMessages.Start"
-            android:icon="@mipmap/ic_easygram_bloom_blue_light"
-            android:roundIcon="@mipmap/ic_easygram_bloom_blue_light_round"
+            android:icon="@mipmap/ic_zefgram_bloom_blue_light"
+            android:roundIcon="@mipmap/ic_zefgram_bloom_blue_light_round"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode|smallestScreenSize|screenLayout"
             android:supportsPictureInPicture="true"
             android:hardwareAccelerated="true"
@@ -149,8 +149,8 @@
             android:enabled="true"
             android:name="org.telegram.messenger.BloomDarkIcon"
             android:theme="@style/Theme.TMessages.Start.BloomDark"
-            android:icon="@mipmap/ic_easygram_bloom_blue_dark"
-            android:roundIcon="@mipmap/ic_easygram_bloom_blue_dark_round"
+            android:icon="@mipmap/ic_zefgram_bloom_blue_dark"
+            android:roundIcon="@mipmap/ic_zefgram_bloom_blue_dark_round"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode|smallestScreenSize|screenLayout"
             android:supportsPictureInPicture="true"
             android:hardwareAccelerated="true"
@@ -170,8 +170,8 @@
             android:enabled="false"
             android:name="org.telegram.messenger.BloomMonoIcon"
             android:theme="@style/Theme.TMessages.Start.BloomMono"
-            android:icon="@mipmap/ic_easygram_bloom_mono"
-            android:roundIcon="@mipmap/ic_easygram_bloom_mono_round"
+            android:icon="@mipmap/ic_zefgram_bloom_mono"
+            android:roundIcon="@mipmap/ic_zefgram_bloom_mono_round"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode|smallestScreenSize|screenLayout"
             android:supportsPictureInPicture="true"
             android:hardwareAccelerated="true"
@@ -723,7 +723,7 @@
             android:exported="true"/>
 
         <receiver android:name=".MusicPlayerWidgetProvider" android:exported="false"
-            android:label="@string/EasygramWidgetName">
+            android:label="@string/ZefgramWidgetName">
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/music_player_widget_info" />
             <intent-filter>
@@ -732,7 +732,7 @@
         </receiver>
 
         <receiver android:name=".MusicPlayerWidgetLargeProvider" android:exported="false"
-            android:label="@string/EasygramWidgetNameLarge">
+            android:label="@string/ZefgramWidgetNameLarge">
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/music_player_widget_large_info" />
             <intent-filter>

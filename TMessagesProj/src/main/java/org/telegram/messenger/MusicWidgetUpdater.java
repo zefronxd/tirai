@@ -1,5 +1,5 @@
 /*
- * This file is part of easygram, a fork of Telegram for Android.
+ * This file is part of zefgram, a fork of Telegram for Android.
  * It is licensed under GNU GPL v. 2 or later.
  * You should have received a copy of the license in this archive (see LICENSE).
  *
@@ -61,7 +61,7 @@ public class MusicWidgetUpdater {
         return instance;
     }
 
-    public static final String ACTION_SEEK = "io.github.webarmour.easygram.widget.seek";
+    public static final String ACTION_SEEK = "io.github.zefronxd.zefgram.widget.seek";
     public static final String EXTRA_PROGRESS = "progress";
     private static final int[] SEEK_ZONE_IDS = {R.id.widget_music_seek_0, R.id.widget_music_seek_1, R.id.widget_music_seek_2, R.id.widget_music_seek_3, R.id.widget_music_seek_4, R.id.widget_music_seek_5, R.id.widget_music_seek_6, R.id.widget_music_seek_7, R.id.widget_music_seek_8, R.id.widget_music_seek_9, R.id.widget_music_seek_10, R.id.widget_music_seek_11, R.id.widget_music_seek_12, R.id.widget_music_seek_13, R.id.widget_music_seek_14, R.id.widget_music_seek_15, R.id.widget_music_seek_16, R.id.widget_music_seek_17, R.id.widget_music_seek_18, R.id.widget_music_seek_19, R.id.widget_music_seek_20, R.id.widget_music_seek_21, R.id.widget_music_seek_22, R.id.widget_music_seek_23};
     private static final int SEEK_ZONES = SEEK_ZONE_IDS.length; // tap zones over the wave (RemoteViews has no tap coordinates)
@@ -263,7 +263,7 @@ public class MusicWidgetUpdater {
             title = message.getMusicTitle();
             author = message.getMusicAuthor();
         } else {
-            title = LocaleController.getString(R.string.EasygramWidgetNothingPlaying);
+            title = LocaleController.getString(R.string.ZefgramWidgetNothingPlaying);
             author = null; // empty state: only "Nothing is playing", no second line
         }
         views.setTextViewText(R.id.widget_music_title, TextUtils.isEmpty(title) ? "—" : title);

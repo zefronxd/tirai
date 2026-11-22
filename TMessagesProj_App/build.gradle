@@ -26,12 +26,12 @@ dependencies {
 }
 
 
-def easygramSigning = new Properties()
-def easygramLocal = rootProject.file("local.properties")
+def zefgramSigning = new Properties()
+def zefgramLocal = rootProject.file("local.properties")
 
-if (easygramLocal.exists()) {
-    easygramLocal.withInputStream {
-        easygramSigning.load(it)
+if (zefgramLocal.exists()) {
+    zefgramLocal.withInputStream {
+        zefgramSigning.load(it)
     }
 }
 
@@ -69,10 +69,10 @@ android {
         }
 
         release {
-            storeFile file(easygramSigning.getProperty("EASYGRAM_RELEASE_KEYSTORE"))
-            storePassword easygramSigning.getProperty("EASYGRAM_RELEASE_STORE_PASSWORD")
-            keyAlias easygramSigning.getProperty("EASYGRAM_RELEASE_KEY_ALIAS")
-            keyPassword easygramSigning.getProperty("EASYGRAM_RELEASE_KEY_PASSWORD")
+            storeFile file(zefgramSigning.getProperty("EASYGRAM_RELEASE_KEYSTORE"))
+            storePassword zefgramSigning.getProperty("EASYGRAM_RELEASE_STORE_PASSWORD")
+            keyAlias zefgramSigning.getProperty("EASYGRAM_RELEASE_KEY_ALIAS")
+            keyPassword zefgramSigning.getProperty("EASYGRAM_RELEASE_KEY_PASSWORD")
         }
     }
 
@@ -135,14 +135,14 @@ android {
 
     productFlavors {
         bundleAfat {
-            // ABIs: see easygram_abis.gradle (flavor filters would be merged with the build type ones)
+            // ABIs: see zefgram_abis.gradle (flavor filters would be merged with the build type ones)
             ext {
                 abiVersionCode = 1
             }
             buildConfigField "boolean", "BUNDLE", "true"
         }
         afat {
-            // ABIs: see easygram_abis.gradle (flavor filters would be merged with the build type ones)
+            // ABIs: see zefgram_abis.gradle (flavor filters would be merged with the build type ones)
             sourceSets.debug {
                 manifest.srcFile '../TMessagesProj/config/debug/AndroidManifest_SDK23.xml'
             }
@@ -173,23 +173,23 @@ android {
     applicationVariants.all { variant ->
         variant.outputs.all { output ->
             if (variant.buildType.name == "debug") {
-                outputFileName = "Easygram Beta ${APP_VERSION_NAME}-${APP_VERSION_CODE}.apk"
+                outputFileName = "Zefgram Beta ${APP_VERSION_NAME}-${APP_VERSION_CODE}.apk"
             } else {
-                outputFileName = "Easygram v${APP_VERSION_NAME}-${APP_VERSION_CODE}.apk"
+                outputFileName = "Zefgram v${APP_VERSION_NAME}-${APP_VERSION_CODE}.apk"
             }
             output.versionCodeOverride = defaultConfig.versionCode * 10 + variant.productFlavors.get(0).abiVersionCode
         }
     }
 
     // App Bundle: human-readable name like the APKs (AGP has no outputFileName for bundles, so the final signed
-    // bundle task's output file is renamed): "EasygramBundle v13.2.3-7305.aab"
+    // bundle task's output file is renamed): "ZefgramBundle v13.2.3-7305.aab"
     // (afterEvaluate: AGP sets the default bundle path when it configures the task, this runs after it)
     afterEvaluate {
         tasks.matching { it.name.startsWith("sign") && it.name.endsWith("Bundle") && it.hasProperty("finalBundleFile") }.configureEach { task ->
             def original = task.finalBundleFile.get().asFile
             def name = task.name.toLowerCase().contains("debug")
-                    ? "EasygramBundle Beta ${APP_VERSION_NAME}-${APP_VERSION_CODE}.aab"
-                    : "EasygramBundle v${APP_VERSION_NAME}-${APP_VERSION_CODE}.aab"
+                    ? "ZefgramBundle Beta ${APP_VERSION_NAME}-${APP_VERSION_CODE}.aab"
+                    : "ZefgramBundle v${APP_VERSION_NAME}-${APP_VERSION_CODE}.aab"
             task.finalBundleFile.set(new File(original.parentFile, name))
         }
     }
@@ -232,4 +232,4 @@ android {
 
 apply plugin: 'com.google.gms.google-services'
 
-apply from: rootProject.file("easygram_abis.gradle")
+apply from: rootProject.file("zefgram_abis.gradle")

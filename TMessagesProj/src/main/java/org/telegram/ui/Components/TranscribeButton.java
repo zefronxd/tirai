@@ -128,7 +128,7 @@ public class TranscribeButton {
         }
     }
 
-    // easygram: M3E loader inside the button and a bounce when the transcription is ready
+    // zefgram: M3E loader inside the button and a bounce when the transcription is ready
     private M3ExpressiveLoader.Morph m3Morph;
     private long m3BounceStart = -1;
 
@@ -219,14 +219,14 @@ public class TranscribeButton {
         boolean processClick, toOpen = !shouldBeOpen;
         if (BuildVars.LOGS_ENABLED) {
             MessageObject mo = parent.getMessageObject();
-            FileLog.d("easygram asr: tap open=" + shouldBeOpen + " loading=" + loading + " premium=" + premium
-                    + " local=" + org.telegram.messenger.asr.EasygramAsrTranscriber.canTranscribe(mo)
+            FileLog.d("zefgram asr: tap open=" + shouldBeOpen + " loading=" + loading + " premium=" + premium
+                    + " local=" + org.telegram.messenger.asr.ZefgramAsrTranscriber.canTranscribe(mo)
                     + " transcribing=" + isTranscribing(mo)
                     + " saved=" + (mo != null && mo.messageOwner != null ? (mo.messageOwner.voiceTranscription == null ? "null" : "\"" + mo.messageOwner.voiceTranscription.length() + " chars\"") + " final=" + mo.messageOwner.voiceTranscriptionFinal : "-"));
         }
         if (!shouldBeOpen) {
             processClick = !loading;
-            if ((premium || org.telegram.messenger.asr.EasygramAsrTranscriber.canTranscribe(parent.getMessageObject()) || canTranscribeTrial(parent.getMessageObject())) && parent.getMessageObject().isSent()) {
+            if ((premium || org.telegram.messenger.asr.ZefgramAsrTranscriber.canTranscribe(parent.getMessageObject()) || canTranscribeTrial(parent.getMessageObject())) && parent.getMessageObject().isSent()) {
                 setLoading(true, true);
             }
         } else {
@@ -240,7 +240,7 @@ public class TranscribeButton {
         }
         pressed = false;
         if (processClick) {
-            if (!premium && !org.telegram.messenger.asr.EasygramAsrTranscriber.canTranscribe(parent.getMessageObject()) && toOpen) {
+            if (!premium && !org.telegram.messenger.asr.ZefgramAsrTranscriber.canTranscribe(parent.getMessageObject()) && toOpen) {
                 if (canTranscribeTrial(parent.getMessageObject()) || parent.getMessageObject() != null && parent.getMessageObject().messageOwner != null && !TextUtils.isEmpty(parent.getMessageObject().messageOwner.voiceTranscription)) {
                     transcribePressed(parent.getMessageObject(), toOpen, parent.getDelegate());
                 } else {
@@ -731,9 +731,9 @@ public class TranscribeButton {
         TLRPC.InputPeer peer = MessagesController.getInstance(account).getInputPeer(messageObject.messageOwner.peer_id);
         long dialogId = DialogObject.getPeerDialogId(peer);
         int messageId = messageObject.messageOwner.id;
-        // easygram: an empty saved result ("No words recognized", also what a failed server request leaves behind)
+        // zefgram: an empty saved result ("No words recognized", also what a failed server request leaves behind)
         // is transcribed again on the device instead of being shown forever
-        final boolean local = !forceServer && org.telegram.messenger.asr.EasygramAsrTranscriber.canTranscribe(messageObject);
+        final boolean local = !forceServer && org.telegram.messenger.asr.ZefgramAsrTranscriber.canTranscribe(messageObject);
         if (open) {
             if (messageObject.messageOwner.voiceTranscription != null && messageObject.messageOwner.voiceTranscriptionFinal
                     && !((local || forceServer) && TextUtils.isEmpty(messageObject.messageOwner.voiceTranscription))) {
@@ -745,7 +745,7 @@ public class TranscribeButton {
                 });
             } else if (local) {
                 if (BuildVars.LOGS_ENABLED) {
-                    FileLog.d("easygram asr: transcribing locally msg_id=" + messageId);
+                    FileLog.d("zefgram asr: transcribing locally msg_id=" + messageId);
                 }
                 transcribeLocally(messageObject, null, delegate);
             } else {
@@ -827,7 +827,7 @@ public class TranscribeButton {
                     MessagesStorage.getInstance(account).updateMessageVoiceTranscription(dialogId, messageId, finalText, messageObject.messageOwner);
                     if (isFinal) {
                         if (!TextUtils.isEmpty(finalText)) {
-                            EasygramTranscriptionReveal.start(messageObject); // easygram: M3E reveal of a ready result
+                            ZefgramTranscriptionReveal.start(messageObject); // zefgram: M3E reveal of a ready result
                         }
                         AndroidUtilities.runOnUIThread(() -> finishTranscription(messageObject, finalId, finalText), Math.max(0, minDuration - duration));
                     }
@@ -846,7 +846,7 @@ public class TranscribeButton {
     }
 
     /**
-     * easygram: Premium as the server sees it. The local "Premium access" switch makes {@link UserConfig#isPremium()}
+     * zefgram: Premium as the server sees it. The local "Premium access" switch makes {@link UserConfig#isPremium()}
      * true, but Telegram's servers don't transcribe for it (every request would fail and be saved as
      * "No words recognized"), so transcription only counts the real subscription.
      */
@@ -858,7 +858,7 @@ public class TranscribeButton {
     /** Messages for which the "no model for this language" hint was shown: the next tap uses the other model. */
     private static final java.util.HashSet<Integer> asrLangHintShown = new java.util.HashSet<>();
 
-    /** easygram: transcribes on the device (see org.telegram.messenger.asr); {@code lang} null picks it automatically. */
+    /** zefgram: transcribes on the device (see org.telegram.messenger.asr); {@code lang} null picks it automatically. */
     public static void transcribeLocally(MessageObject messageObject, String lang, ChatMessageCell.ChatMessageCellDelegate delegate) {
         if (messageObject == null || messageObject.messageOwner == null) {
             return;
@@ -870,42 +870,42 @@ public class TranscribeButton {
         transcribeOperationsByDialogPosition.put((Integer) reqInfoHash(messageObject), messageObject);
         final int key = reqInfoHash(messageObject);
         final boolean allowOtherLang = asrLangHintShown.remove(key);
-        org.telegram.messenger.asr.EasygramAsrTranscriber.transcribe(messageObject, lang, allowOtherLang, (text, error, msgLang) -> {
+        org.telegram.messenger.asr.ZefgramAsrTranscriber.transcribe(messageObject, lang, allowOtherLang, (text, error, msgLang) -> {
             if (BuildVars.LOGS_ENABLED) {
-                FileLog.d("easygram asr: result error=" + error + " lang=" + msgLang + " text=" + (text == null ? "null" : text.length() + " chars"));
+                FileLog.d("zefgram asr: result error=" + error + " lang=" + msgLang + " text=" + (text == null ? "null" : text.length() + " chars"));
             }
             if (text == null) {
                 if (transcribeOperationsByDialogPosition != null) {
                     transcribeOperationsByDialogPosition.remove((Integer) reqInfoHash(messageObject));
                 }
-                if (error == org.telegram.messenger.asr.EasygramAsrTranscriber.ERROR_NO_LANG_MODEL) {
-                    if (org.telegram.messenger.asr.EasygramAsrTranscriber.hasServerTranscription(messageObject)) {
+                if (error == org.telegram.messenger.asr.ZefgramAsrTranscriber.ERROR_NO_LANG_MODEL) {
+                    if (org.telegram.messenger.asr.ZefgramAsrTranscriber.hasServerTranscription(messageObject)) {
                         // Telegram can transcribe it: better than a model of the wrong language
                         transcribePressed(messageObject, true, delegate, true);
                         return;
                     }
                     NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.voiceTranscriptionUpdate, messageObject);
                     asrLangHintShown.add(key);
-                    boolean english = org.telegram.messenger.asr.EasygramAsrModels.LANG_EN.equals(msgLang);
+                    boolean english = org.telegram.messenger.asr.ZefgramAsrModels.LANG_EN.equals(msgLang);
                     BulletinFactory.global().createSimpleBulletin(R.raw.info,
-                            org.telegram.messenger.LocaleController.getString(english ? R.string.EasygramAsrNoEnModel : R.string.EasygramAsrNoRuModel),
-                            org.telegram.messenger.LocaleController.getString(R.string.EasygramAsrDownload),
+                            org.telegram.messenger.LocaleController.getString(english ? R.string.ZefgramAsrNoEnModel : R.string.ZefgramAsrNoRuModel),
+                            org.telegram.messenger.LocaleController.getString(R.string.ZefgramAsrDownload),
                             () -> {
                                 org.telegram.ui.ActionBar.BaseFragment fragment = org.telegram.ui.LaunchActivity.getSafeLastFragment();
                                 if (fragment != null) {
-                                    fragment.presentFragment(new org.telegram.ui.EasygramAsrSettingsActivity());
+                                    fragment.presentFragment(new org.telegram.ui.ZefgramAsrSettingsActivity());
                                 }
                             }).show();
                     return;
                 }
                 NotificationCenter.getInstance(account).postNotificationName(NotificationCenter.voiceTranscriptionUpdate, messageObject);
                 int res;
-                if (error == org.telegram.messenger.asr.EasygramAsrTranscriber.ERROR_TOO_LONG) {
-                    res = org.telegram.messenger.R.string.EasygramAsrErrorTooLong;
-                } else if (error == org.telegram.messenger.asr.EasygramAsrTranscriber.ERROR_DOWNLOAD) {
-                    res = org.telegram.messenger.R.string.EasygramAsrErrorDownload;
+                if (error == org.telegram.messenger.asr.ZefgramAsrTranscriber.ERROR_TOO_LONG) {
+                    res = org.telegram.messenger.R.string.ZefgramAsrErrorTooLong;
+                } else if (error == org.telegram.messenger.asr.ZefgramAsrTranscriber.ERROR_DOWNLOAD) {
+                    res = org.telegram.messenger.R.string.ZefgramAsrErrorDownload;
                 } else {
-                    res = org.telegram.messenger.R.string.EasygramAsrError;
+                    res = org.telegram.messenger.R.string.ZefgramAsrError;
                 }
                 BulletinFactory.global().createErrorBulletin(org.telegram.messenger.LocaleController.getString(res)).show();
                 return;
@@ -913,7 +913,7 @@ public class TranscribeButton {
             TranscribeButton.openVideoTranscription(messageObject);
             messageObject.messageOwner.voiceTranscriptionOpen = true;
             if (!TextUtils.isEmpty(text)) {
-                EasygramTranscriptionReveal.start(messageObject);
+                ZefgramTranscriptionReveal.start(messageObject);
             }
             finishTranscription(messageObject, 0, text);
         });
@@ -1002,7 +1002,7 @@ public class TranscribeButton {
         if (messageObject == null || messageObject.messageOwner == null) {
             return false;
         }
-        if (isFreeTranscribeInChat(messageObject) || org.telegram.messenger.asr.EasygramAsrTranscriber.canTranscribe(messageObject)) {
+        if (isFreeTranscribeInChat(messageObject) || org.telegram.messenger.asr.ZefgramAsrTranscriber.canTranscribe(messageObject)) {
             return false;
         }
         if (!TextUtils.isEmpty(messageObject.messageOwner.voiceTranscription)) {

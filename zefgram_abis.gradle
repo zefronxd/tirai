@@ -1,0 +1,38 @@
+/*
+ * This file is part of zefgram, a fork of Telegram for Android.
+ * It is licensed under GNU GPL v. 2 or later.
+ * You should have received a copy of the license in this archive (see LICENSE).
+ *
+ * Copyright webarmour, 2026.
+ */
+
+// Zefgram: which CPU architectures (ABIs) are built and packaged.
+//
+// Applied at the end of TMessagesProj/build.gradle (native code, CMake) and TMessagesProj_App/build.gradle (packaging),
+// so both modules always agree. Every ABI costs a full native build (~9.7k C/C++ files), so only what is needed:
+//   debug   - arm64-v8a: all real phones; much faster native build, smaller APK, faster install
+//   release - armeabi-v7a + arm64-v8a: x86 / x86_64 are only emulators and rare Chromebooks
+//
+// Override in local.properties or with -P, comma separated, e.g.:
+//   EASYGRAM_DEBUG_ABIS=arm64-v8a,x86_64            (debug on an x86_64 emulator as well)
+//   EASYGRAM_RELEASE_ABIS=armeabi-v7a,arm64-v8a,x86,x86_64   (all four, as upstream)
+
+def zefgramLocalProps = new Properties()
+def zefgramLocalPropsFile = rootProject.file('local.properties')
+if (zefgramLocalPropsFile.exists()) {
+    zefgramLocalPropsFile.withInputStream { zefgramLocalProps.load(it) }
+}
+
+def zefgramAbiProp = { String name, String defaultValue ->
+    def value = project.findProperty(name) ?: zefgramLocalProps.getProperty(name)
+    def list = (value ?: defaultValue).toString().split(',')*.trim().findAll { !it.isEmpty() }
+    return list.isEmpty() ? defaultValue.split(',') as List : list
+}
+
+def zefgramDebugAbis = zefgramAbiProp('EASYGRAM_DEBUG_ABIS', 'arm64-v8a')
+def zefgramReleaseAbis = zefgramAbiProp('EASYGRAM_RELEASE_ABIS', 'armeabi-v7a,arm64-v8a')
+
+android.buildTypes.all { buildType ->
+    buildType.ndk.abiFilters.clear()
+    buildType.ndk.abiFilters.addAll(buildType.name == 'debug' ? zefgramDebugAbis : zefgramReleaseAbis)
+}

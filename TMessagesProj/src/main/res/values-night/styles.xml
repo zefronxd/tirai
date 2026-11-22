@@ -15,27 +15,27 @@
         <item name="android:windowActionBar">false</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:actionBarStyle">@style/ActionBar.Transparent.TMessages.Start</item>
-        <item name="android:colorBackground">@color/easygram_bloom_blue_light_background</item>
-        <item name="android:windowBackground">@color/easygram_bloom_blue_light_background</item>
+        <item name="android:colorBackground">@color/zefgram_bloom_blue_light_background</item>
+        <item name="android:windowBackground">@color/zefgram_bloom_blue_light_background</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:colorPrimaryDark">#1c242e</item>
         <item name="android:colorPrimary">#232d3a</item>
         <item name="android:navigationBarColor">#000000</item>
         <item name="android:forceDarkAllowed">false</item>
         <item name="android:windowSplashScreenAnimationDuration">@integer/splash_screen_duration</item>
-        <item name="android:windowSplashScreenBackground">@color/easygram_bloom_blue_light_background</item>
+        <item name="android:windowSplashScreenBackground">@color/zefgram_bloom_blue_light_background</item>
     </style>
 
     <style name="Theme.TMessages.Start.BloomDark" parent="Theme.TMessages.Start">
-        <item name="android:colorBackground">@color/easygram_bloom_blue_dark_background</item>
-        <item name="android:windowBackground">@color/easygram_bloom_blue_dark_background</item>
-        <item name="android:windowSplashScreenBackground">@color/easygram_bloom_blue_dark_background</item>
+        <item name="android:colorBackground">@color/zefgram_bloom_blue_dark_background</item>
+        <item name="android:windowBackground">@color/zefgram_bloom_blue_dark_background</item>
+        <item name="android:windowSplashScreenBackground">@color/zefgram_bloom_blue_dark_background</item>
     </style>
 
     <style name="Theme.TMessages.Start.BloomMono" parent="Theme.TMessages.Start">
-        <item name="android:colorBackground">@color/easygram_bloom_mono_background</item>
-        <item name="android:windowBackground">@color/easygram_bloom_mono_background</item>
-        <item name="android:windowSplashScreenBackground">@color/easygram_bloom_mono_background</item>
+        <item name="android:colorBackground">@color/zefgram_bloom_mono_background</item>
+        <item name="android:windowBackground">@color/zefgram_bloom_mono_background</item>
+        <item name="android:windowSplashScreenBackground">@color/zefgram_bloom_mono_background</item>
     </style>
 
     <style name="ActionBar.Transparent.TMessages.Start" parent="android:style/Widget.Material.Light.ActionBar">

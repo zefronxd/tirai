@@ -575,7 +575,7 @@ public class UserConfig extends BaseController {
     public boolean isPremium() {
         if (ApplicationLoader.applicationContext != null) {
             SharedPreferences mainConfig = ApplicationLoader.applicationContext.getSharedPreferences("mainconfig", Context.MODE_PRIVATE);
-            if (mainConfig.getBoolean("easygram_premium_access", false)) {
+            if (mainConfig.getBoolean("zefgram_premium_access", false)) {
                 return true;
             }
         }

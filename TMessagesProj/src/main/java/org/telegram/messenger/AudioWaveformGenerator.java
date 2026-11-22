@@ -1,5 +1,5 @@
 /*
- * This file is part of easygram, a fork of Telegram for Android.
+ * This file is part of zefgram, a fork of Telegram for Android.
  * It is licensed under GNU GPL v. 2 or later.
  * You should have received a copy of the license in this archive (see LICENSE).
  *
@@ -42,7 +42,7 @@ public class AudioWaveformGenerator {
     private static final long TOTAL_TIMEOUT_MS = 8000;
     private static final long DEQUEUE_TIMEOUT_US = 5000;
 
-    private static final DispatchQueue queue = new DispatchQueue("easygramWaveformQueue");
+    private static final DispatchQueue queue = new DispatchQueue("zefgramWaveformQueue");
     private static final LruCache<String, float[]> memoryCache = new LruCache<>(64);
     private static final HashSet<String> pending = new HashSet<>();
     private static final HashSet<String> failed = new HashSet<>();
@@ -254,7 +254,7 @@ public class AudioWaveformGenerator {
     }
 
     private static File cacheFile(String key) {
-        File dir = new File(ApplicationLoader.applicationContext.getCacheDir(), "easygram_waveforms_v2");
+        File dir = new File(ApplicationLoader.applicationContext.getCacheDir(), "zefgram_waveforms_v2");
         //noinspection ResultOfMethodCallIgnored
         dir.mkdirs();
         return new File(dir, key + ".wf");

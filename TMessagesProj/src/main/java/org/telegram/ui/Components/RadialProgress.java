@@ -584,7 +584,7 @@ public class RadialProgress {
             if (percentTo > 1) {
                 drawArc(canvas, oval, startAngle + 90, sweepAngle - 90, useCenter, paint);
             }
-        } else if (!useCenter && M3ExpressiveLoader.enabled()) { // easygram: Material 3 Expressive wavy progress
+        } else if (!useCenter && M3ExpressiveLoader.enabled()) { // zefgram: Material 3 Expressive wavy progress
             if (m3WavePath == null) m3WavePath = new Path();
             M3ExpressiveLoader.drawWavyArc(canvas, m3WavePath, oval, startAngle, sweepAngle, paint);
         } else {

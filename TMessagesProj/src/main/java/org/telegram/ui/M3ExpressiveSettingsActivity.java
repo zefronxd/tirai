@@ -1,5 +1,5 @@
 /*
- * This file is part of easygram, a fork of Telegram for Android.
+ * This file is part of zefgram, a fork of Telegram for Android.
  * It is licensed under GNU GPL v. 2 or later.
  * You should have received a copy of the license in this archive (see LICENSE).
  *
@@ -25,10 +25,10 @@ import org.telegram.messenger.R;
 import org.telegram.ui.ActionBar.ActionBar;
 import org.telegram.ui.ActionBar.BaseFragment;
 import org.telegram.ui.ActionBar.Theme;
-import org.telegram.ui.Cells.EasygramLoaderPreviewCell;
-import org.telegram.ui.Cells.EasygramM3eOverviewCell;
-import org.telegram.ui.Cells.EasygramMiniWavePreviewCell;
-import org.telegram.ui.Cells.EasygramWavePreviewCell;
+import org.telegram.ui.Cells.ZefgramLoaderPreviewCell;
+import org.telegram.ui.Cells.ZefgramM3eOverviewCell;
+import org.telegram.ui.Cells.ZefgramMiniWavePreviewCell;
+import org.telegram.ui.Cells.ZefgramWavePreviewCell;
 import org.telegram.ui.Cells.HeaderCell;
 import org.telegram.ui.Cells.ShadowSectionCell;
 import org.telegram.ui.Cells.TextCheckCell;
@@ -89,7 +89,7 @@ public class M3ExpressiveSettingsActivity extends BaseFragment {
     public View createView(Context context) {
         actionBar.setBackButtonImage(R.drawable.ic_ab_back);
         actionBar.setAllowOverlayTitle(true);
-        actionBar.setTitle(LocaleController.getString(R.string.EasygramM3eTitle));
+        actionBar.setTitle(LocaleController.getString(R.string.ZefgramM3eTitle));
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override
             public void onItemClick(int id) {
@@ -203,21 +203,21 @@ public class M3ExpressiveSettingsActivity extends BaseFragment {
                     view = new TextInfoPrivacyCell(context);
                     break;
                 case TYPE_OVERVIEW:
-                    view = new EasygramM3eOverviewCell(context);
+                    view = new ZefgramM3eOverviewCell(context);
                     break;
                 case TYPE_VOICE:
-                    view = new EasygramWavePreviewCell(context);
+                    view = new ZefgramWavePreviewCell(context);
                     break;
                 case TYPE_MINI_WAVES:
                 case TYPE_MINI_VOICE_WAVES: {
                     final boolean voice = viewType == TYPE_MINI_VOICE_WAVES;
-                    EasygramMiniWavePreviewCell mini = new EasygramMiniWavePreviewCell(context, voice);
+                    ZefgramMiniWavePreviewCell mini = new ZefgramMiniWavePreviewCell(context, voice);
                     mini.setListener(detailed -> setMiniDetailed(voice, detailed));
                     view = mini;
                     break;
                 }
                 case TYPE_LOADERS:
-                    view = new EasygramLoaderPreviewCell(context);
+                    view = new ZefgramLoaderPreviewCell(context);
                     break;
                 case TYPE_SHADOW:
                 default:
@@ -237,32 +237,32 @@ public class M3ExpressiveSettingsActivity extends BaseFragment {
                 case TYPE_HEADER: {
                     HeaderCell cell = (HeaderCell) holder.itemView;
                     if (position == overviewHeaderRow) {
-                        cell.setText(LocaleController.getString(R.string.EasygramM3eOverviewHeader));
+                        cell.setText(LocaleController.getString(R.string.ZefgramM3eOverviewHeader));
                     } else if (position == voiceHeaderRow) {
-                        cell.setText(LocaleController.getString(R.string.EasygramM3eVoiceHeader));
+                        cell.setText(LocaleController.getString(R.string.ZefgramM3eVoiceHeader));
                     } else if (position == miniHeaderRow) {
-                        cell.setText(LocaleController.getString(R.string.EasygramM3eMiniPlayerHeader));
+                        cell.setText(LocaleController.getString(R.string.ZefgramM3eMiniPlayerHeader));
                     } else if (position == downloadHeaderRow) {
-                        cell.setText(LocaleController.getString(R.string.EasygramM3eDownloadHeader));
+                        cell.setText(LocaleController.getString(R.string.ZefgramM3eDownloadHeader));
                     }
                     break;
                 }
                 case TYPE_CHECK: {
                     TextCheckCell cell = (TextCheckCell) holder.itemView;
                     if (position == enableRow) {
-                        cell.setTextAndCheck(LocaleController.getString(R.string.EasygramMaterialExpressive),
+                        cell.setTextAndCheck(LocaleController.getString(R.string.ZefgramMaterialExpressive),
                                 OtherSettingsActivity.isMaterialExpressiveEnabled(), false);
                     } else if (position == voiceRow) {
-                        cell.setTextAndCheck(LocaleController.getString(R.string.EasygramM3eVoice),
+                        cell.setTextAndCheck(LocaleController.getString(R.string.ZefgramM3eVoice),
                                 OtherSettingsActivity.isM3eVoiceEnabled(), false);
                     } else if (position == miniDetailedRow) {
-                        cell.setTextAndCheck(LocaleController.getString(R.string.EasygramM3eMiniMusicDetailed),
+                        cell.setTextAndCheck(LocaleController.getString(R.string.ZefgramM3eMiniMusicDetailed),
                                 OtherSettingsActivity.isMiniPlayerDetailedWaveEnabled(false), false);
                     } else if (position == miniVoiceDetailedRow) {
-                        cell.setTextAndCheck(LocaleController.getString(R.string.EasygramM3eMiniVoiceDetailed),
+                        cell.setTextAndCheck(LocaleController.getString(R.string.ZefgramM3eMiniVoiceDetailed),
                                 OtherSettingsActivity.isMiniPlayerDetailedWaveEnabled(true), false);
                     } else if (position == hapticRow) {
-                        cell.setTextAndCheck(LocaleController.getString(R.string.EasygramDownloadHaptic),
+                        cell.setTextAndCheck(LocaleController.getString(R.string.ZefgramDownloadHaptic),
                                 OtherSettingsActivity.isDownloadHapticEnabled(), false);
                     }
                     break;
@@ -270,7 +270,7 @@ public class M3ExpressiveSettingsActivity extends BaseFragment {
                 case TYPE_INFO: {
                     TextInfoPrivacyCell cell = (TextInfoPrivacyCell) holder.itemView;
                     cell.setText(LocaleController.getString(position == hapticInfoRow
-                            ? R.string.EasygramDownloadHapticInfo : R.string.EasygramM3eOverviewInfo));
+                            ? R.string.ZefgramDownloadHapticInfo : R.string.ZefgramM3eOverviewInfo));
                     break;
                 }
                 case TYPE_VOICE:

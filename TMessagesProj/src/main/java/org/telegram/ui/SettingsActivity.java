@@ -804,13 +804,13 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     IconBackgroundColors.PURPLE.top,
                     IconBackgroundColors.PURPLE.bottom,
                     R.drawable.settings_round_video,
-                    getString(R.string.EasygramVideoMessagesTitle),
-                    getString(R.string.EasygramVideoMessagesInfo)
+                    getString(R.string.ZefgramVideoMessagesTitle),
+                    getString(R.string.ZefgramVideoMessagesInfo)
             ));
         }
-        items.add(SettingCell.Factory.of(100, IconBackgroundColors.RED.top, IconBackgroundColors.RED.bottom, R.drawable.settings_other, getString(R.string.EasygramOther), getString(R.string.EasygramOtherInfo)));
-        items.add(SettingCell.Factory.of(103, 0xFF9575CD, 0xFF5E35B1, R.drawable.settings_m3e, getString(R.string.EasygramM3eTitle), getString(R.string.EasygramM3eSettingsInfo)));
-        items.add(SettingCell.Factory.of(104, 0xFF5C9CFF, 0xFF7E57C2, R.drawable.settings_local_ai, getString(R.string.EasygramLocalAiTitle), getString(R.string.EasygramLocalAiSettingsInfo)));
+        items.add(SettingCell.Factory.of(100, IconBackgroundColors.RED.top, IconBackgroundColors.RED.bottom, R.drawable.settings_other, getString(R.string.ZefgramOther), getString(R.string.ZefgramOtherInfo)));
+        items.add(SettingCell.Factory.of(103, 0xFF9575CD, 0xFF5E35B1, R.drawable.settings_m3e, getString(R.string.ZefgramM3eTitle), getString(R.string.ZefgramM3eSettingsInfo)));
+        items.add(SettingCell.Factory.of(104, 0xFF5C9CFF, 0xFF7E57C2, R.drawable.settings_local_ai, getString(R.string.ZefgramLocalAiTitle), getString(R.string.ZefgramLocalAiSettingsInfo)));
         items.add(SettingCell.Factory.of(3, IconBackgroundColors.GREEN.top, IconBackgroundColors.GREEN.bottom, R.drawable.settings_privacy, getString(R.string.SettingsPrivacySecurity), getString(R.string.SettingsPrivacySecurityInfo)));
         items.add(SettingCell.Factory.of(5, IconBackgroundColors.RED.top, IconBackgroundColors.RED.bottom, R.drawable.settings_sounds, getString(R.string.SettingsNotifications), getString(R.string.SettingsNotificationsInfo)));
         items.add(SettingCell.Factory.of(6, IconBackgroundColors.BLUE_DEEP.top, IconBackgroundColors.BLUE_DEEP.bottom, R.drawable.settings_data, getString(R.string.SettingsData), getString(R.string.SettingsDataInfo)));
@@ -818,9 +818,9 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
         items.add(SettingCell.Factory.of(8, IconBackgroundColors.CYAN.top, IconBackgroundColors.CYAN.bottom, R.drawable.settings_devices, getString(R.string.SettingsDevices), getString(R.string.SettingsDevicesInfo)));
         items.add(SettingCell.Factory.of(9, IconBackgroundColors.ORANGE_DEEP.top, IconBackgroundColors.ORANGE_DEEP.bottom, R.drawable.settings_power, getString(R.string.SettingsPowerSaving), getString(R.string.SettingsPowerSavingInfo)));
         items.add(SettingCell.Factory.of(10, IconBackgroundColors.PURPLE.top, IconBackgroundColors.PURPLE.bottom, R.drawable.settings_language, getString(R.string.SettingsLanguage), LocaleController.getCurrentLanguageName()));
-        if (!org.telegram.messenger.EasygramBuild.isPlayStore()) // Play build: updates only through Google Play
-        items.add(SettingCell.Factory.of(101, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.settings_features, getString(R.string.EasygramCheckUpdates), getString(R.string.EasygramCheckUpdatesInfo)));
-        items.add(SettingCell.Factory.of(102, 0xFFF06292, 0xFFD81B60, R.drawable.settings_support_heart, getString(R.string.EasygramSupportAuthor), getString(R.string.EasygramSupportAuthorInfo)));
+        if (!org.telegram.messenger.ZefgramBuild.isPlayStore()) // Play build: updates only through Google Play
+        items.add(SettingCell.Factory.of(101, IconBackgroundColors.BLUE.top, IconBackgroundColors.BLUE.bottom, R.drawable.settings_features, getString(R.string.ZefgramCheckUpdates), getString(R.string.ZefgramCheckUpdatesInfo)));
+        items.add(SettingCell.Factory.of(102, 0xFFF06292, 0xFFD81B60, R.drawable.settings_support_heart, getString(R.string.ZefgramSupportAuthor), getString(R.string.ZefgramSupportAuthorInfo)));
 
         items.add(UItem.asShadow(null));
         if (!walletAbove && getMessagesController().config.walletAvailable.get()) {
@@ -977,13 +977,13 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 presentSettingFragment(new OtherSettingsActivity());
                 break;
             case 101:
-                org.telegram.ui.Components.EasygramUpdater.check(getParentActivity(), true);
+                org.telegram.ui.Components.ZefgramUpdater.check(getParentActivity(), true);
                 break;
             case 103:
                 presentSettingFragment(new M3ExpressiveSettingsActivity());
                 break;
             case 104:
-                presentSettingFragment(new EasygramLocalAiActivity());
+                presentSettingFragment(new ZefgramLocalAiActivity());
                 break;
             case 102: {
                 if (getParentActivity() == null) {
@@ -992,13 +992,13 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 final String donateUrl = "https://boosty.to/webarmour/donate";
                 QRCodeBottomSheet sheet = new QRCodeBottomSheet(
                         getParentActivity(),
-                        getString(R.string.EasygramSupportAuthor),
+                        getString(R.string.ZefgramSupportAuthor),
                         donateUrl,
-                        getString(R.string.EasygramSupportAuthorDescription) + "\n\n" + donateUrl,
+                        getString(R.string.ZefgramSupportAuthorDescription) + "\n\n" + donateUrl,
                         true,
                         resourceProvider
                 );
-                sheet.setPrimaryAction(getString(R.string.EasygramSupportOnBoosty),
+                sheet.setPrimaryAction(getString(R.string.ZefgramSupportOnBoosty),
                         v -> Browser.openUrlInSystemBrowser(getParentActivity(), donateUrl));
                 showDialog(sheet);
                 break;
@@ -1011,7 +1011,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                 break;
 
             case 17:
-                Browser.openUrl(getParentActivity(), "https://t.me/easygram_dev");
+                Browser.openUrl(getParentActivity(), "https://t.me/zefgram_dev");
                 break;
             case 18:
                 Browser.openUrl(getParentActivity(), LocaleController.getString(R.string.TelegramFaqUrl));
@@ -1099,7 +1099,7 @@ public class SettingsActivity extends BaseFragment implements NotificationCenter
                     }
                     break;
             }
-            int versionString = pInfo.packageName.endsWith(".beta") ? R.string.EasygramBetaVersion : R.string.EasygramVersion;
+            int versionString = pInfo.packageName.endsWith(".beta") ? R.string.ZefgramBetaVersion : R.string.ZefgramVersion;
             return formatString(versionString, String.format(Locale.US, "v%s (%d)\n%s", pInfo.versionName, code, abi));
         } catch (Exception e) {
             FileLog.e(e);

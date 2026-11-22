@@ -55,7 +55,7 @@ import io.github.webarmour.videomessagerecorder.camera.ExposureMode;
 import java.util.ArrayList;
 import java.util.Locale;
 
-/** Easygram: all video-note controls in native Telegram settings cells (API 28+). */
+/** Zefgram: all video-note controls in native Telegram settings cells (API 28+). */
 public class RoundVideoSettingsActivity extends BaseFragment {
     private static final String PREFS = "round_video_custom_recorder";
     private static final String MODE = "mode";
@@ -258,7 +258,7 @@ public class RoundVideoSettingsActivity extends BaseFragment {
         createRows();
         actionBar.setBackButtonImage(R.drawable.ic_ab_back);
         actionBar.setAllowOverlayTitle(true);
-        actionBar.setTitle(getString(R.string.EasygramVideoMessagesTitle));
+        actionBar.setTitle(getString(R.string.ZefgramVideoMessagesTitle));
         actionBar.setActionBarMenuOnItemClick(new ActionBar.ActionBarMenuOnItemClick() {
             @Override public void onItemClick(int id) {
                 if (id == -1) finishFragment();
@@ -682,7 +682,7 @@ public class RoundVideoSettingsActivity extends BaseFragment {
             case MODE: return p.getBoolean(MODE, true) ? getString(R.string.RVManualSettings) : getString(R.string.RVAutomatic);
             case QUALITY: {
                 String value = p.getString(QUALITY, "MAX");
-                // Display legacy selections from older Easygram versions as the new labels.
+                // Display legacy selections from older Zefgram versions as the new labels.
                 if ("TELEGRAM".equals(value)) value = "DEFAULT_TELEGRAM";
                 if ("IPHONE_LIKE".equals(value)) value = "MEDIUM";
                 if ("TELEGRAM_NOTE_MAX".equals(value)) value = "MAX";

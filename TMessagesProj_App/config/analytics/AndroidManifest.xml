@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    This file is part of easygram, a fork of Telegram for Android.
+    This file is part of zefgram, a fork of Telegram for Android.
     It is licensed under GNU GPL v. 2 or later.
     You should have received a copy of the license in this archive (see LICENSE).
 
@@ -10,7 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application>
-        <!-- Override the shared Telegram manifests only for Easygram variants. -->
+        <!-- Override the shared Telegram manifests only for Zefgram variants. -->
         <meta-data
             android:name="firebase_analytics_collection_deactivated"
             tools:node="remove" />

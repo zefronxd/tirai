@@ -281,7 +281,7 @@ public class RadialProgressView extends View implements Theme.Colorable {
         updateAnimation();
     }
 
-    // easygram: Material 3 Expressive loaders (shape-morphing when indeterminate, wavy when determinate)
+    // zefgram: Material 3 Expressive loaders (shape-morphing when indeterminate, wavy when determinate)
     private M3ExpressiveLoader.Morph m3Morph;
     private Path m3WavePath;
 

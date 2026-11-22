@@ -51,7 +51,7 @@ public class RadialProgress2 {
                 && nextIcon != MediaActionDrawable.ICON_DOWNLOAD && nextIcon != MediaActionDrawable.ICON_NONE;
     }
 
-    // easygram: bounce of the whole button when a download finishes (M3E)
+    // zefgram: bounce of the whole button when a download finishes (M3E)
     private static final long M3_BOUNCE_MS = 600;
     private long m3BounceStart = -1;
     private int m3LastNextIcon = -1;
@@ -102,7 +102,7 @@ public class RadialProgress2 {
         return 1f + 0.25f * (float) (Math.exp(-4 * t) * Math.sin(2.5 * Math.PI * t));
     }
 
-    // easygram: smooth morph between the plain round button and the progress shape (both directions)
+    // zefgram: smooth morph between the plain round button and the progress shape (both directions)
     private static final float M3_SHAPE_MIX_MS = 320f;
     private float m3ShapeMixT; // linear 0..1, eased when drawn
     private long m3ShapeMixLastTime;
@@ -626,7 +626,7 @@ public class RadialProgress2 {
             float scaleMini = 1.0f - 0.1f * (1.0f - circleCheckProgress);
             miniDrawCanvas.scale(scaleMini, scaleMini, centerX, centerY);
         }
-        // easygram: M3E download button - the button shape itself shows the progress (growing scalloped shape)
+        // zefgram: M3E download button - the button shape itself shows the progress (growing scalloped shape)
         final int previousIcon = mediaActionDrawable.getPreviousIcon();
         final float iconTransition = mediaActionDrawable.getTransitionProgress();
         // also while the cancel icon is still fading out, otherwise the drawable's own wavy ring shows up for a moment

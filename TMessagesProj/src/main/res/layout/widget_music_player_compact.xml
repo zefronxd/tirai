@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    This file is part of easygram, a fork of Telegram for Android.
+    This file is part of zefgram, a fork of Telegram for Android.
     It is licensed under GNU GPL v. 2 or later.
     You should have received a copy of the license in this archive (see LICENSE).
 
     Copyright webarmour, 2026.
 -->
-<!-- Easygram music widget, COMPACT variant (2 rows): cover + texts + controls, wave below. -->
+<!-- Zefgram music widget, COMPACT variant (2 rows): cover + texts + controls, wave below. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_music_root"
     android:layout_width="match_parent"
@@ -29,7 +29,7 @@
             android:id="@+id/widget_music_cover"
             android:layout_width="54dp"
             android:layout_height="54dp"
-            android:contentDescription="@string/EasygramWidgetCover"
+            android:contentDescription="@string/ZefgramWidgetCover"
             android:scaleType="fitCenter" />
 
         <LinearLayout

@@ -103,7 +103,7 @@ public class ContextProgressView extends View implements Theme.Colorable {
         int x = getMeasuredWidth() / 2 - AndroidUtilities.dp(9);
         int y = getMeasuredHeight() / 2 - AndroidUtilities.dp(9);
         cicleRect.set(x, y, x + AndroidUtilities.dp(18), y + AndroidUtilities.dp(18));
-        if (M3ExpressiveLoader.enabled()) { // easygram: Material 3 Expressive shape-morphing indicator
+        if (M3ExpressiveLoader.enabled()) { // zefgram: Material 3 Expressive shape-morphing indicator
             if (m3Morph == null) m3Morph = new M3ExpressiveLoader.Morph();
             m3Morph.draw(canvas, cicleRect.centerX(), cicleRect.centerY(), AndroidUtilities.dp(9), outerPaint.getColor());
             invalidate();

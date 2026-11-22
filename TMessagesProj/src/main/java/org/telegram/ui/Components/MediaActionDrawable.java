@@ -536,7 +536,7 @@ public class MediaActionDrawable extends Drawable {
             }
             if (alpha != 0) {
                 paint.setAlpha((int) (alpha * overrideAlpha));
-                if (M3ExpressiveLoader.enabled()) { // easygram: M3 "stop" square instead of the cross
+                if (M3ExpressiveLoader.enabled()) { // zefgram: M3 "stop" square instead of the cross
                     paint3.setAlpha((int) (alpha * overrideAlpha));
                     M3ExpressiveLoader.drawStop(canvas, rect, cx, cy, AndroidUtilities.dp(isMini ? 3.5f : 5f), paint3);
                 } else if (currentIcon == ICON_CANCEL_FILL || nextIcon == ICON_CANCEL_FILL) {
@@ -928,7 +928,7 @@ public class MediaActionDrawable extends Drawable {
         return AndroidUtilities.dp(48);
     }
 
-    // easygram: Material 3 Expressive wavy download progress
+    // zefgram: Material 3 Expressive wavy download progress
     private Path m3WavePath;
     /** The container (RadialProgress2) shows the download progress with its own shape, so no ring here. */
     private boolean m3ProgressInContainer;

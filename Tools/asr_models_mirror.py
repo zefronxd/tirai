@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# This file is part of easygram, a fork of Telegram for Android.
+# This file is part of zefgram, a fork of Telegram for Android.
 # It is licensed under GNU GPL v. 2 or later.
 # You should have received a copy of the license in this archive (see LICENSE).
 #
@@ -28,9 +28,9 @@ import tarfile
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CATALOG = os.path.join(ROOT, "TMessagesProj/src/main/java/org/telegram/messenger/asr/EasygramAsrModels.java")
+CATALOG = os.path.join(ROOT, "TMessagesProj/src/main/java/org/telegram/messenger/asr/ZefgramAsrModels.java")
 TAG = "asr-models-v1"
-REPO = "webarmour/Easygram"
+REPO = "zefronxd/tirai"
 UPSTREAM = "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/"
 
 HF = "https://huggingface.co/csukuangfj/"
@@ -48,7 +48,7 @@ SOURCES = {
 
 
 def read_catalog():
-    """Returns {model id: [(file name, size, sha256)]} parsed from EasygramAsrModels.java."""
+    """Returns {model id: [(file name, size, sha256)]} parsed from ZefgramAsrModels.java."""
     text = open(CATALOG, encoding="utf-8").read()
     files = {}
     for m in re.finditer(r'mirrored\("([^"]+)", "([^"]+)", (\d+)L, "([0-9a-f]{64})"', text):
@@ -167,7 +167,7 @@ def main():
         exists = subprocess.run(["gh", "release", "view", TAG, "-R", REPO], capture_output=True).returncode == 0
         if not exists:
             subprocess.run(["gh", "release", "create", TAG, "-R", REPO, "--title", "Speech recognition models (v1)",
-                            "--notes", "Files downloaded by easygram for on-device voice transcription. "
+                            "--notes", "Files downloaded by zefgram for on-device voice transcription. "
                                        "Each model keeps its own license (see the *--LICENSE files).",
                             "--latest=false"], check=True)
         subprocess.run(["gh", "release", "upload", TAG, "-R", REPO, "--clobber", *outputs], check=True)

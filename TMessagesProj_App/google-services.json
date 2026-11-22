@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "1083878941089",
-    "project_id": "easygram-328cc",
-    "storage_bucket": "easygram-328cc.firebasestorage.app"
+    "project_id": "zefgram-328cc",
+    "storage_bucket": "zefgram-328cc.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:1083878941089:android:e267d67cc4499ad25aebe0",
         "android_client_info": {
-          "package_name": "io.github.webarmour.easygram"
+          "package_name": "io.github.zefronxd.zefgram"
         }
       },
       "oauth_client": [],
@@ -28,7 +28,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1083878941089:android:0a3f2825acfb88275aebe0",
         "android_client_info": {
-          "package_name": "io.github.webarmour.easygram.beta"
+          "package_name": "io.github.zefronxd.zefgram.beta"
         }
       },
       "oauth_client": [],

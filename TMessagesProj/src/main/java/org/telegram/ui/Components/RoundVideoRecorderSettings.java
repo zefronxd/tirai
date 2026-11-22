@@ -1,5 +1,5 @@
 /*
- * This file is part of easygram, a fork of Telegram for Android.
+ * This file is part of zefgram, a fork of Telegram for Android.
  * It is licensed under GNU GPL v. 2 or later.
  * You should have received a copy of the license in this archive (see LICENSE).
  *
@@ -86,7 +86,7 @@ public final class RoundVideoRecorderSettings {
     public static final boolean DEFAULT_FACE_AWARE_METERING = true;
     public static final boolean DEFAULT_FACE_AWARE_EXPOSURE = false;
 
-    // Defaults for new Easygram installs (existing SharedPreferences always take precedence).
+    // Defaults for new Zefgram installs (existing SharedPreferences always take precedence).
     // Resetting CustomRecorder options also returns to these defaults.
     private static final boolean DEFAULT_RECORDER = true;
     private static final boolean DEFAULT_MANUAL_MODE = true;
@@ -140,9 +140,9 @@ public final class RoundVideoRecorderSettings {
     /** Fill missing preferences once, preserving existing user choices. */
     private static SharedPreferences prefs(Context c) {
         SharedPreferences p = c.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        if (!p.getBoolean("easygram_native_defaults_initialized_v1", false)) {
+        if (!p.getBoolean("zefgram_native_defaults_initialized_v1", false)) {
             synchronized (RoundVideoRecorderSettings.class) {
-                if (!p.getBoolean("easygram_native_defaults_initialized_v1", false)) {
+                if (!p.getBoolean("zefgram_native_defaults_initialized_v1", false)) {
                     SharedPreferences.Editor e = p.edit();
                     if (!p.contains(RECORDER)) e.putBoolean(RECORDER, true);
                     if (!p.contains(MODE)) e.putBoolean(MODE, true);
@@ -171,7 +171,7 @@ public final class RoundVideoRecorderSettings {
                     if (!p.contains(CONCURRENT_PREWARM_FPS)) e.putInt(CONCURRENT_PREWARM_FPS, DEFAULT_CONCURRENT_PREWARM_FPS);
                     if (!p.contains(FACE_AWARE_METERING)) e.putBoolean(FACE_AWARE_METERING, DEFAULT_FACE_AWARE_METERING);
                     if (!p.contains(FACE_AWARE_EXPOSURE)) e.putBoolean(FACE_AWARE_EXPOSURE, DEFAULT_FACE_AWARE_EXPOSURE);
-                    e.putBoolean("easygram_native_defaults_initialized_v1", true).apply();
+                    e.putBoolean("zefgram_native_defaults_initialized_v1", true).apply();
                 }
             }
             sanitizePreferences(c, new RoundVideoCameraSupport(c));
@@ -432,7 +432,7 @@ public final class RoundVideoRecorderSettings {
         return Math.max(0, Math.min(MAX_RECORDING_START_DELAY_MS, saved));
     }
 
-    /** A conservative 30s cap for the heaviest selectable Easygram profile.
+    /** A conservative 30s cap for the heaviest selectable Zefgram profile.
      *  This is a product safeguard, not an official Telegram size guarantee.
      */
     public static boolean isThirtySecondProfile(Context context) {

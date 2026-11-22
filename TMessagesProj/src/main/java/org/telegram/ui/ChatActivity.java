@@ -1276,7 +1276,7 @@ public class ChatActivity extends BaseFragment implements
     public boolean allowExpandPreviewByClick;
     private boolean showSearchAsIcon;
     private boolean showAudioCallAsIcon;
-    // easygram: in private chats the search takes the header slot of the call icon, the call goes to the menu
+    // zefgram: in private chats the search takes the header slot of the call icon, the call goes to the menu
     private boolean searchIconInsteadOfCall;
     public MessageEnterTransitionContainer messageEnterTransitionContainer;
     private float pullingDownOffset, pullingBottomOffset;
@@ -7070,7 +7070,7 @@ public class ChatActivity extends BaseFragment implements
             private float totalDy = 0;
             private boolean scrollUp;
             private final int scrollValue = AndroidUtilities.dp(100);
-            private int hideKeyboardScrollDy; // easygram: upward drag distance towards closing the keyboard
+            private int hideKeyboardScrollDy; // zefgram: upward drag distance towards closing the keyboard
 
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -7137,7 +7137,7 @@ public class ChatActivity extends BaseFragment implements
                     chatListThanosEffect.scroll(dx, dy);
                 }
                 scrollUp = dy < 0;
-                // easygram: the user drags up through the chat with the keyboard open -> close the keyboard
+                // zefgram: the user drags up through the chat with the keyboard open -> close the keyboard
                 if (dy < 0 && recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_DRAGGING
                         && OtherSettingsActivity.isHideKeyboardOnScrollEnabled()
                         && chatActivityEnterView != null && isKeyboardVisible()) {
@@ -30900,7 +30900,7 @@ public class ChatActivity extends BaseFragment implements
     }
 
     /**
-     * easygram: when the call would be shown as a header icon in a private chat, show the search icon
+     * zefgram: when the call would be shown as a header icon in a private chat, show the search icon
      * in its place instead (the call stays available in the menu). Must run right after
      * showAudioCallAsIcon was computed.
      */

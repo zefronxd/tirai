@@ -1288,7 +1288,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
     private boolean hasEmbed;
 
     private boolean wasSending;
-    /** easygram: message whose photo is uploading with the cancel button shown, for the M3E success feedback. */
+    /** zefgram: message whose photo is uploading with the cancel button shown, for the M3E success feedback. */
     private MessageObject m3UploadingMessage;
     boolean checkOnlyButtonPressed;
     int buttonX;
@@ -11176,7 +11176,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             (
                 TranscribeButton.hasRealPremium(currentAccount)
                 ||
-                org.telegram.messenger.asr.EasygramAsrTranscriber.canTranscribe(currentMessageObject)
+                org.telegram.messenger.asr.ZefgramAsrTranscriber.canTranscribe(currentMessageObject)
                 ||
                 TranscribeButton.isFreeTranscribeInChat(currentMessageObject)
                 ||
@@ -14251,9 +14251,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
 
                     if (needDrawTextDefault && caption && currentMessageObject != null && currentMessageObject.isVoiceTranscriptionOpen()
                             && currentMessageObject.messageOwner.voiceTranscription != null
-                            && org.telegram.ui.Components.EasygramTranscriptionReveal.draw(this, canvas, currentMessageObject, block.textLayout,
+                            && org.telegram.ui.Components.ZefgramTranscriptionReveal.draw(this, canvas, currentMessageObject, block.textLayout,
                                 block.charactersOffset, currentMessageObject.messageOwner.voiceTranscription.length())) {
-                        needDrawTextDefault = false; // easygram: M3E "decoding" reveal of a new transcription
+                        needDrawTextDefault = false; // zefgram: M3E "decoding" reveal of a new transcription
                     }
                     if (needDrawTextDefault) {
                         SpoilerEffect.renderWithRipple(this, invalidateSpoilersParent, blockSpoilersColor, 0, block.spoilersPatchedTextLayout, 0, block.textLayout, block.spoilers, canvas, currentPosition != null);
@@ -14568,7 +14568,7 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         }
         if (m3UploadingMessage != null && (m3UploadingMessage != currentMessageObject
                 || !currentMessageObject.isSending() && !currentMessageObject.isEditing())) {
-            // easygram: a single photo is sent - its button just hides (cancel -> none), which the progress
+            // zefgram: a single photo is sent - its button just hides (cancel -> none), which the progress
             // can't tell from other changes, so the M3E bounce + haptic is started from here
             int icon = radialProgress.getIcon();
             if (m3UploadingMessage == currentMessageObject && attachedToWindow && !currentMessageObject.isSendError()
